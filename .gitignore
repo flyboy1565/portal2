@@ -110,3 +110,6 @@ ENV/
 
 #Ignore Migrations
 migrations/
+
+# Ignore API Template
+template_api/
