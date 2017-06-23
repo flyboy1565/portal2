@@ -25,7 +25,7 @@ SECRET_KEY = '@23v-a!p10zr9!y#_fj!7k_1_mg()^o4!xacjc2jo%ze#el*81'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hsweb-1-flyboy1565.c9users.io']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     #Third Party Apps
-    #
+    'localflavor',
+    'auditlog',
+    'rest_framework',
     #My Apps
     'locations',
 ]

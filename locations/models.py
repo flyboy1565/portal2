@@ -1,7 +1,13 @@
+# django 
 from django.db import models
 
+# third party
+from localflavor.us.models import USStateField, PhoneNumberField
+from auditlog.registry import auditlog
+
+# my helpers
 from locations.choices import location_status
-# Create your models here.
+
 
 class Store(models.Model):
     store_number = models.IntegerField(primary_key=True)
@@ -84,3 +90,11 @@ class DMA(models.Model):
     
     def __str__(self):
         return "{}".format(self.dma_number)
+        
+
+auditlog.register(Store)
+auditlog.register(District)
+auditlog.register(Region)
+auditlog.register(Division)
+auditlog.register(DistrbutionCenter)
+auditlog.register(DMA)
