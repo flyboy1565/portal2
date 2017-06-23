@@ -1,10 +1,10 @@
 from django.db import models
 
-from choices import location_status
+from locations.choices import location_status
 # Create your models here.
 
 class Store(models.Model):
-    store = models.IntegerField(primary_key=True)
+    store_number = models.IntegerField(primary_key=True)
     three_letter_code = models.CharField(max_length=3, blank=True, null=True)
     system_name = models.CharField(max_length=8, blank=True, null=True)
     longitude = models.DecimalField(max_digits=11, decimal_places=8)
@@ -34,36 +34,53 @@ class Store(models.Model):
     store_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):
-        return "{}".format(self.store)
+        return "{}".format(self.store_number)
     
 
 class District(models.Model):
-    district = models.IntegerField(primary_key=True)
+    district_number = models.IntegerField(primary_key=True)
     manager_name = models.CharField(max_length=100, blank=True, null=True)
-    connected_to_store = models.ForeignKey('Store', blank=True, null=True)
+    connected_to_store = models.ForeignKey('Store', blank=True, null=True, related_name='district_off_store')
     region = models.ForeignKey('Region', blank=True, null=True)
     district_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):
-        return "{}".format(self.district)
+        return "{}".format(self.district_number)
 
     
 class Region(models.Model):
-    region = models.IntegerField(primary_key=True)
+    region_number = models.IntegerField(primary_key=True)
     manager_name = models.CharField(max_length=100, blank=True, null=True)
-    connected_to_store = models.ForeignKey('Store', blank=True, null=True)
-    region = models.ForeignKey('Region', blank=True, null=True)
+    connected_to_store = models.ForeignKey('Store', blank=True, null=True, related_name='region_off_store')
+    division = models.ForeignKey('Division', blank=True, null=True)
     district_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):
-        return "{}".format(self.district)
+        return "{}".format(self.region_number)
+        
+        
+class Division(models.Model):
+    division_number = models.IntegerField(primary_key=True)
+    manager_name = models.CharField(max_length=100, blank=True, null=True)
+    connected_to_store = models.ForeignKey('Store', blank=True, null=True, related_name='division_off_store')
+    division_status = models.CharField(max_length=20, choices=location_status())
+    
+    def __str__(self):
+        return "{}".format(self.division_number)
         
 
 class DistrbutionCenter(models.Model):
-    dc = models.IntegerField(primary_key=True)
+    dc_number = models.IntegerField(primary_key=True)
     manager_name = models.CharField(max_length=100, blank=True, null=True)
     store_off_dc = models.ForeignKey('Store', blank=True, null=True)        
     dc_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):
-        return "{}".format(self.dc)
+        return "{}".format(self.dc_number)
+        
+
+class DMA(models.Model):
+    dma_number = models.IntegerField(primary_key=True)
+    
+    def __str__(self):
+        return "{}".format(self.dma_number)

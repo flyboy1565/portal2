@@ -103,3 +103,10 @@ ENV/
 .c9/nakignore
 .c9/project.settings
 *.private.py
+
+#Databases
+*.sqlite3
+*.db
+
+#Ignore Migrations
+migrations/
