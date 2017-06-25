@@ -5,6 +5,9 @@ from locations.models import Store, District, Region, Division, DistrbutionCente
 from .serializers import (
         StoreListSerializer, StoreDetailSerializer,
         DistrictListSerializer, DistrictDetailSerializer,
+        RegionListSerializer, RegionDetailSerializer,
+        DivisionListSerializer, DivisionDetailSerializer,
+        DistrbutionCenterListSerializer, DistrbutionCenterDetailSerializer,
 )
 
 
@@ -29,3 +32,34 @@ class DistrictListAPIView(ListAPIView):
     queryset = District.objects.all()
     serializer_class = DistrictListSerializer
     
+    
+class RegionListAPIView(ListAPIView):
+    queryset = Region.objects.all()
+    serializer_class = RegionListSerializer
+
+class RegionDetailAPIView(RetrieveAPIView):
+    queryset = Region.objects.all()
+    serializer_class = RegionDetailSerializer
+    lookup_field = 'region_number'
+    
+    
+class DivisionListAPIView(ListAPIView):
+    queryset = Division.objects.all()
+    serializer_class = DivisionListSerializer
+    
+
+class DivisionDetailAPIView(RetrieveAPIView):
+    queryset = Division.objects.all()
+    serializer_class = DivisionDetailSerializer
+    lookup_field = 'division_number'
+    
+    
+class DistrbutionCenterListAPIView(ListAPIView):
+    queryset = DistrbutionCenter.objects.all()
+    serializer_class = DistrbutionCenterListSerializer
+    
+
+class DistrbutionCenterDetailAPIView(RetrieveAPIView):
+    queryset = DistrbutionCenter.objects.all()
+    serializer_class = DistrbutionCenterDetailSerializer
+    lookup_field = 'dc_number'
