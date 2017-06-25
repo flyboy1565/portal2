@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 
 from localflavor.us.models import PhoneNumberField
 from auditlog.registry import auditlog
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
 
 from locations.models import Store
 from .choices import phone_types, note_types, account_types, stick_types
@@ -67,16 +69,16 @@ class BillingAccountNumber(models.Model):
     description = models.CharField(max_length=10, choices=account_types())
     
     def __str__(self):
-        return '{} - {}'.format(self.account_number, self.get_description_display)
+        return '{} - {}'.format(self.account_number, self.description)
 
     
 class LastAudit(models.Model):
-    store = models.ForeignKey(Store)
+    store = models.ForeignKey('PhoneBilling')
     audit_date = models.DateTimeField(auto_now_add=True)
     audit_by = models.ForeignKey(User)
     
     def __str__(self):
-        return '{} - {}'.format(self.store.store_number, self.audit_date)
+        return '{} - {}'.format(self.store.store.store_number, self.audit_date)
         
         
 class CordlessPhoneType(models.Model):
@@ -120,7 +122,19 @@ class PhoneBilling(models.Model):
     def __str__(self):
         return "{}".format(self.store.store_number)
 
-
+    def audit_overdue(self):
+        try:
+            last_audit = LastAudit.objects.filter(store=self.pk).latest('pk')
+        except:
+            return True
+        else:
+            six_months = last_audit.audit_date + relativedelta(months=+6)
+            if timezone.now() > six_months:
+                return True
+            else: 
+                return False
+        
+        
 auditlog.register(PhoneLine)
 auditlog.register(LastAudit)
 auditlog.register(Comment)
