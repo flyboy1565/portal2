@@ -2,7 +2,7 @@
 from django.db import models
 
 # third party
-from localflavor.us.models import USStateField, PhoneNumberField
+from localflavor.us.models import USStateField
 from localflavor.us.us_states import STATE_CHOICES
 from auditlog.registry import auditlog
 

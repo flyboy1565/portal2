@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     #My Apps
     'locations',
+    'phones',
 ]
 
 MIDDLEWARE_CLASSES = [
