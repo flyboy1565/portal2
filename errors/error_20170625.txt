@@ -1,0 +1,72 @@
+Environment:
+
+
+Request Method: GET
+Request URL: https://hsweb-1-flyboy1565.c9users.io/api/phones/2942/
+
+Django Version: 1.11
+Python Version: 3.4.3
+Installed Applications:
+['django.contrib.admin',
+ 'django.contrib.auth',
+ 'django.contrib.contenttypes',
+ 'django.contrib.sessions',
+ 'django.contrib.messages',
+ 'django.contrib.staticfiles',
+ 'localflavor',
+ 'auditlog',
+ 'rest_framework',
+ 'locations',
+ 'phones']
+Installed Middleware:
+['django.middleware.security.SecurityMiddleware',
+ 'django.contrib.sessions.middleware.SessionMiddleware',
+ 'django.middleware.common.CommonMiddleware',
+ 'django.middleware.csrf.CsrfViewMiddleware',
+ 'django.contrib.auth.middleware.AuthenticationMiddleware',
+ 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+ 'django.contrib.messages.middleware.MessageMiddleware',
+ 'django.middleware.clickjacking.XFrameOptionsMiddleware']
+
+
+
+Traceback:
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/django/core/handlers/exception.py" in inner
+  41.             response = get_response(request)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/django/core/handlers/base.py" in _legacy_get_response
+  249.             response = self._get_response(request)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/django/core/handlers/base.py" in _get_response
+  187.                 response = self.process_exception_by_middleware(e, request)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/django/core/handlers/base.py" in _get_response
+  185.                 response = wrapped_callback(request, *callback_args, **callback_kwargs)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/django/views/decorators/csrf.py" in wrapped_view
+  58.         return view_func(*args, **kwargs)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/django/views/generic/base.py" in view
+  68.             return self.dispatch(request, *args, **kwargs)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/rest_framework/views.py" in dispatch
+  489.             response = self.handle_exception(exc)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/rest_framework/views.py" in handle_exception
+  449.             self.raise_uncaught_exception(exc)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/rest_framework/views.py" in dispatch
+  486.             response = handler(request, *args, **kwargs)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/rest_framework/generics.py" in get
+  210.         return self.retrieve(request, *args, **kwargs)
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/rest_framework/mixins.py" in retrieve
+  56.         instance = self.get_object()
+
+File "/home/ubuntu/workspace/venv/lib/python3.4/site-packages/rest_framework/generics.py" in get_object
+  94.             (self.__class__.__name__, lookup_url_kwarg)
+
+Exception Type: AssertionError at /api/phones/2942/
+Exception Value: Expected view PhoneBillingDetailAPIView to be called with a URL keyword argument named "store.store_number". Fix your URL conf, or set the `.lookup_field` attribute on the view correctly.

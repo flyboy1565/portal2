@@ -5,8 +5,7 @@ from .views import (
     StoreDetailAPIView, StoreListAPIView, 
     DistrictDetailAPIView, DistrictListAPIView,
     RegionDetailAPIView, RegionListAPIView,
-    DivisionListAPIView, DivisionDetailAPIView,
-    DistrbutionCenterListAPIView, DistrbutionCenterDetailAPIView
+    DivisionListAPIView, DivisionDetailAPIView
 )
   
 
@@ -17,8 +16,4 @@ urlpatterns = [
     url(r'^district/(?P<district_number>[\w-]+)/$', DistrictDetailAPIView.as_view(), name='district-detail'),
     url(r'^region/$', RegionListAPIView.as_view(), name='region-list'),
     url(r'^region/(?P<region_number>[\w-]+)/$', RegionDetailAPIView.as_view(), name='region-detail'),
-    url(r'^division/$', DivisionListAPIView.as_view(), name='division-list'),
-    url(r'^division/(?P<division_number>[\w-]+)/$', DivisionDetailAPIView.as_view(), name='division-detail'),
-    url(r'^dc/$', DistrbutionCenterListAPIView.as_view(), name='dc-list'),
-    url(r'^dc/(?P<dc_number>[\w-]+)/$', DistrbutionCenterDetailAPIView.as_view(), name='dc-detail'),
 ]

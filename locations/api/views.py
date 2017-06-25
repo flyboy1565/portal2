@@ -7,7 +7,6 @@ from .serializers import (
         DistrictListSerializer, DistrictDetailSerializer,
         RegionListSerializer, RegionDetailSerializer,
         DivisionListSerializer, DivisionDetailSerializer,
-        DistrbutionCenterListSerializer, DistrbutionCenterDetailSerializer,
 )
 
 
@@ -45,21 +44,9 @@ class RegionDetailAPIView(RetrieveAPIView):
     
 class DivisionListAPIView(ListAPIView):
     queryset = Division.objects.all()
-    serializer_class = DivisionListSerializer
-    
+    serializer_class = RegionListSerializer
 
 class DivisionDetailAPIView(RetrieveAPIView):
     queryset = Division.objects.all()
     serializer_class = DivisionDetailSerializer
     lookup_field = 'division_number'
-    
-    
-class DistrbutionCenterListAPIView(ListAPIView):
-    queryset = DistrbutionCenter.objects.all()
-    serializer_class = DistrbutionCenterListSerializer
-    
-
-class DistrbutionCenterDetailAPIView(RetrieveAPIView):
-    queryset = DistrbutionCenter.objects.all()
-    serializer_class = DistrbutionCenterDetailSerializer
-    lookup_field = 'dc_number'
