@@ -19,7 +19,7 @@ class PhoneTag(models.Model):
         
 
 class PhoneLine(models.Model):
-    store = models.ForeignKey(Store)
+    store = models.ForeignKey('PhoneBilling')
     line_number = models.PositiveIntegerField()
     phone_number = PhoneNumberField(unique=True)
     tag =  models.ManyToManyField('PhoneTag')
@@ -54,7 +54,7 @@ class Carrier(models.Model):
     
 
 class Comment(models.Model):
-    store = models.ForeignKey(Store)
+    store = models.ForeignKey('PhoneBilling')
     note = models.TextField(max_length=500)
     note_type = models.CharField(max_length=10, choices=note_types())
     user = models.ForeignKey(User)
@@ -78,12 +78,14 @@ class LastAudit(models.Model):
     audit_by = models.ForeignKey(User)
     
     def __str__(self):
-        return '{} - {}'.format(self.store.store.store_number, self.audit_date)
+        return '{} - {}'.format(self.store.store_number, self.audit_date)
         
         
 class CordlessPhoneType(models.Model):
     cordless_phone = models.CharField(max_length=60)
     
+    def __str__(self):
+        return self.cordless_phone
     
 class PhoneBilling(models.Model):
     store = models.OneToOneField(Store, related_name='phone_billing_store')

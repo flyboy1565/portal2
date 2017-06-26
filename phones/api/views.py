@@ -8,7 +8,7 @@ from .serializers import PhoneBillingDetailSerializer, PhoneBillingListSerialize
 class PhoneBillingDetailAPIView(RetrieveAPIView):
     queryset = PhoneBilling.objects.all()
     serializer_class = PhoneBillingDetailSerializer
-    lookup_field = 'store.store_number'
+    lookup_field = 'store'
 
 
 class PhoneBillingListAPIView(ListAPIView):
