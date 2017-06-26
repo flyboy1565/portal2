@@ -25,7 +25,7 @@ SECRET_KEY = '@23v-a!p10zr9!y#_fj!7k_1_mg()^o4!xacjc2jo%ze#el*81'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['hsweb-1-flyboy1565.c9users.io']
+ALLOWED_HOSTS = ['hsweb-1-flyboy1565.c9users.io', 'https://s.codepen.io']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
@@ -42,12 +42,14 @@ INSTALLED_APPS = [
     'localflavor',
     'auditlog',
     'rest_framework',
+    'corsheaders',
     #My Apps
     'locations',
     'phones',
 ]
 
 MIDDLEWARE_CLASSES = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +59,8 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'hsweb_1.urls'
 
@@ -127,3 +131,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# http://www.django-rest-framework.org/api-guide/permissions/
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    )
+}

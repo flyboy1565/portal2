@@ -86,7 +86,7 @@ class CordlessPhoneType(models.Model):
     
     
 class PhoneBilling(models.Model):
-    store = models.OneToOneField(Store)
+    store = models.OneToOneField(Store, related_name='phone_billing_store')
     # account numbers
     master_account_number = models.ForeignKey(BillingAccountNumber, related_name='master_account')
     secondary_account_numbers = models.ManyToManyField(BillingAccountNumber, related_name='backup_accounts')
@@ -118,6 +118,10 @@ class PhoneBilling(models.Model):
     # Cordless
     cordless = models.ForeignKey(CordlessPhoneType,blank=True, null=True)
     cordless_warranty_in_months = models.IntegerField(default=24)
+    
+    @property
+    def store_number(self):
+        return self.store.store_number
     
     def __str__(self):
         return "{}".format(self.store.store_number)

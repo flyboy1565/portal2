@@ -2,19 +2,16 @@ from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
 
 from phones.models import *
 
+
 class PhoneBillingListSerializer(ModelSerializer):
-    url = HyperlinkedIdentityField(view_name='store-phone-detail', lookup_field='pk')
+    url = HyperlinkedIdentityField(view_name='store-phone-detail', lookup_field='store_number')
     
     class Meta:
         model = PhoneBilling
-        fields = ('pk', 'url')
+        fields = ('store_number', 'url')
+        
         
 class PhoneBillingDetailSerializer(ModelSerializer):
-    district_url = HyperlinkedIdentityField(
-        view_name='store-phone-detail', 
-        lookup_field='pk',
-        lookup_url_kwarg = 'pk'
-    )
 
     class Meta:
         model = PhoneBilling
