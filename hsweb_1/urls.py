@@ -20,5 +20,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/locations/', include('locations.api.urls')),
-    url(r'^api/phones/', include('phones.api.urls'))
+    url(r'^api/phones/', include('phones.api.urls')),
+    url(r'^api/issues/', include('issues.api.urls')),
+    url(r'^', include('accounts.urls', namespace='accounts')),
 ]

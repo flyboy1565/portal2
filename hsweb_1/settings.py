@@ -43,9 +43,12 @@ INSTALLED_APPS = [
     'auditlog',
     'rest_framework',
     'corsheaders',
+    'channels',
     #My Apps
     'locations',
     'phones',
+    'issues',
+    'accounts',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -67,7 +70,7 @@ ROOT_URLCONF = 'hsweb_1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,4 +141,15 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
     )
+}
+
+# https://realpython.com/blog/python/getting-started-with-django-channels/
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'hsweb_1.routing.channel_routing',
+    }
 }
