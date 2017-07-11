@@ -11,17 +11,20 @@
       </li>
     {% endfor %}
   </ul>
+  <br>
+  <h5>Channels Responses</h5>
+  <pre id='channel_responses'></pre>
 {% endblock content %}
 
 {% block script %}
   <script>
-    var socket = new WebSocket('wss://' + window.location.host + '/users/');
-
-    socket.onopen = function open() {
-      console.log('WebSockets connection created.');
+    users_socket = register_socket('users');
+    
+    users_socket.onopen = function open() {
+      console.log('WebSockets connection created for Users.');
     };
 
-    socket.onmessage = function message(event) {
+    users_socket.onmessage = function user_message(event) {
       var data = JSON.parse(event.data);
       // NOTE: We escape JavaScript to prevent XSS attacks.
       var username = encodeURI(data['username']);
@@ -37,8 +40,32 @@
       }
     };
 
-    if (socket.readyState == WebSocket.OPEN) {
-      socket.onopen();
+    if (users_socket.readyState == WebSocket.OPEN) {
+      users_socket.onopen();
+    };
+    
+    issues_socket = register_socket('issues');
+    
+    issues_socket.onopen = function open() {
+      console.log('WebSockets connection created for Issues.');
+    };
+    
+    issues_socket.onmessage = function issue_message(event){
+      console.log(event);
+      var data = JSON.stringify(JSON.parse(event.data));
+      console.log(data);
+      $('#channel_responses').append(data + '\n');
     }
+    
+    if (issues_socket.readyState == WebSocket.OPEN) {
+      issues_socket.onopen();
+    };
+    
+    function register_socket(socket){
+      var socket = new WebSocket('wss://' + window.location.host + '/' + socket + '/');
+      return socket; 
+    };
+    
+    
   </script>
 {% endblock script %}

@@ -1,13 +1,14 @@
-from datetime import datetime, timedelta
+import numbers
+from datetime import datetime, timedelta, date
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
 from locations.models import Store
+from circuits.models import Circuit
 
 from .choices import issues_choices
 
-# Create your models here.
 
 class CommunicationsIssue(models.Model):
     store = models.ForeignKey(Store)
@@ -20,12 +21,25 @@ class CommunicationsIssue(models.Model):
     resolved_time = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
-        return "{} - {} - {}".format(self.store.store_number, self.get_issue_display(), self.down_since)
+        return "{} - {} - {} - {}".format(self.store.store_number, self.get_issue_display(), self.down_since, self.is_active())
+        
+    def is_active(self):
+        if self.resolved:
+            return 'Resolved'
+        return 'Unresolved'
         
     def total_time_down(self):
         if self.resolved is False:
             return (timezone.now() - self.down_since).total_seconds()
-        return (self.resolved_time - self.down_since).total_seconds()
+        return (self.resolved_time - self.down_since).total_seconds
+    
+    @property    
+    def workon(self):
+        return WorkOn.objects.filter(issue_id=self).last()
+    
+    @property    
+    def circuits(self): 
+        return Circuit.objects.filter(store__store_number=self.store.store_number,circuit_type='P').last()
         
         
 class WorkOn(models.Model):
@@ -41,6 +55,7 @@ class WorkOn(models.Model):
             self.issue_id.store.store_number, 
             self.work_on_at
             )
+            
             
             
             

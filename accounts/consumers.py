@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 def ws_connect(message):
     logger.info('websocket_connect. message = %s', message)
     Group('users').add(message.reply_channel)
-    Group('issues').add(message.reply_channel)
-    logger.info('websocket_connect. message = %s', message)
     Group('users').send({
         'text': json.dumps({
             'username': message.user.username,
@@ -29,4 +27,3 @@ def ws_disconnect(message):
         })
     })
     Group('users').discard(message.reply_channel)
-    Group('issues').discard(message.reply_channel)

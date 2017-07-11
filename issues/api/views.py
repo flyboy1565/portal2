@@ -14,5 +14,6 @@ class IssueDetailAPIView(RetrieveAPIView):
 
 
 class IssueListAPIView(ListAPIView):
-    queryset = CommunicationsIssue.objects.all()
+    queryset = CommunicationsIssue.objects.filter(resolved=False)
     serializer_class = IssueListSerializer
+    

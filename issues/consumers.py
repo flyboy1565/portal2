@@ -20,4 +20,4 @@ def ws_notify_issue(message):
             'is_ready_accept_issues': True
         })}
     logging.debug('websocket_connect. dict = %s', response_dcit)
-    Group('issues').send(response_dcit)
+    Group('users').send(response_dcit)

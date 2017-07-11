@@ -60,7 +60,7 @@ class Region(models.Model):
     manager_name = models.CharField(max_length=100, blank=True, null=True)
     connected_to_store = models.ForeignKey('Store', blank=True, null=True, related_name='region_off_store')
     division = models.ForeignKey('Division', blank=True, null=True)
-    district_status = models.CharField(max_length=20, choices=location_status())
+    region_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):
         return "{}".format(self.region_number)
