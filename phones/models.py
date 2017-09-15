@@ -62,7 +62,7 @@ class Comment(models.Model):
     created_timestamp = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return "{} - {} - {}".format(self.store.store_number, self.get_note_type_display, self.created_timestamp)
+        return "{}".format(self.store.store_number)
     
 
 class BillingAccountNumber(models.Model):

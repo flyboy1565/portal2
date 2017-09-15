@@ -9,3 +9,6 @@ class LoggedInUser(models.Model):
     created_date = models.DateTimeField(auto_now=True, null=True, blank=True)
     updated_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     created_via = models.CharField(max_length=10, choices=(('LDAP', 'LDAP'), ('Manually', 'Manually'), ('App', 'Application')))
+    
+    def __str__(self):
+        return '{}'.format(self.user)

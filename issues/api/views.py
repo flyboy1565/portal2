@@ -17,3 +17,8 @@ class IssueListAPIView(ListAPIView):
     queryset = CommunicationsIssue.objects.filter(resolved=False)
     serializer_class = IssueListSerializer
     
+
+def UpdateIssueWithWorkOn(issue_id):
+    queryset = '' # CommunicationsIssue.objects.get(pk=issue_id)
+    
+    

@@ -6,6 +6,8 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hsweb_1.settings")
 django.setup()
 
+from django.contrib.auth.models import User
+
 # your imports, e.g. Django models
 from locations.models import Store, District, Region, Division, DMA, DistrbutionCenter
 from circuits.models import Circuit, CommunicationsType
@@ -49,7 +51,7 @@ def add_locations():
     
     print ('Creating Store 2942')
     store = Store()
-    store.store_number = 2924
+    store.store_number = 2942
     store.three_letter_code = 'PR2'
     store.system_name = 'A2942PR2'
     store.longitude = -120.68240700
@@ -94,10 +96,10 @@ def add_circuits():
     ct.save()
     
     circuit = Circuit()
-    circuit.store = 2942
-    circuit.primary_vendor = 1
+    circuit.store = Store.objects.get(pk=2942)
+    circuit.primary_vendor = Vendor.objects.all()[0]
     circuit.primary_circuit_id = 'A1awr23'
-    circuit.communications_type = 1
+    circuit.communications_type = CommunicationsType.objects.all()[0]
     circuit.circuit_type = 'P'
     circuit.save()
 
@@ -108,10 +110,10 @@ def add_phones():
     tag.save()
     
     line = PhoneLine()
-    line.store = 2942
+    line.store = Store.objects.get(store_number=2942)
     line.line_number = 1
     line.phone_number = '5555555555'
-    line.tag = 1
+    line.tag = tag
     line.phone_type = 'PTS'
     line.save()
     
@@ -124,16 +126,16 @@ def add_phones():
     phone_type.save()
     
     carrier = Carrier()
-    carrier.carrier_name = 1
+    carrier.carrier_name = Vendor.objects.all()[0]
     carrier.phone_number = '5555555555'
     carrier.email = 'test@verizon.com'
     carrier.save()
     
     comment = Comment()
-    comment.store = 2942
+    comment.store = Store.objects.get(store_number=2942)
     comment.note = 'Simple Test'
     comment.note_type = 'Site'
-    comment.user = 1
+    comment.user = User.objects.all()[0]
     comment.save()
     
     account_number = BillingAccountNumber()
@@ -142,7 +144,7 @@ def add_phones():
     account_number.save()
     
     billing = PhoneBilling()
-    billing.store = 2942
+    billing.store = Store.objects.get(store_number=2942)
     billing.master_account_number = account_number
     billing.local_exchange_carrier_1 = carrier
     billing.local_exchange_carrier_2 = carrier
@@ -156,9 +158,18 @@ def add_phones():
     billing.save()
     
 def add_issues():
-    issue = Store()
-    issue.store = 2942
+    issue = CommunicationsIssue()
+    issue.store = Store.objects.get(store_number=2942)
     issue.issue = 'B'
     issue.save()
     
     
+
+def main():
+    add_locations()
+    add_vendors()
+    add_circuits()
+    add_phones()
+    add_issues()
+    
+main()

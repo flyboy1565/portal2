@@ -14,7 +14,6 @@ class CommunicationsIssue(models.Model):
     store = models.ForeignKey(Store)
     issue = models.CharField(max_length=5, choices=issues_choices())
     ticket = models.CharField(max_length=100, null=True, blank=True)
-    confirmed = models.BooleanField(default=False)
     down_since = models.DateTimeField(null=True, blank=True)
     last_checked = models.DateTimeField(auto_now=True)
     resolved = models.BooleanField(default=False)
@@ -32,6 +31,19 @@ class CommunicationsIssue(models.Model):
         if self.resolved is False:
             return (timezone.now() - self.down_since).total_seconds()
         return (self.resolved_time - self.down_since).total_seconds
+        
+    @property
+    def icon(self):
+        color = 'red'
+        time_threshold = datetime.now() - timedelta(minutes=5)
+        workon = WorkOn.objects.filter(issue_id=self, work_on_at__lt=time_threshold).last()
+        if workon is not None:
+            color = 'blue'
+        elif self.ticket is not None:
+            color = 'purple'
+        return [color, self.issue]
+        
+        
     
     @property    
     def workon(self):
