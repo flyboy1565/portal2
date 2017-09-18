@@ -1,0 +1,46 @@
+<div id="infowindow-content">
+    <div class="info-header text-center alert-danger"><h4> {{issue.get_issue_display}}</h4></div>
+    <div class="info-header text-center alert-info"><h5>Store {{ issue.store.store_number }}</h5></div>
+    <div class="info-data">
+        <div class="pull-left">Vendor: {{ issue.circuit.primary_vendor.vendor_name }}</div>
+        <div class="pull-right">Ticket:<a href="#">610219</a></div>
+    </div>
+    <div class="info-data">
+        <div class="pull-left">POTS Line: {{ issue.phone.phone_number }}</div>
+        <div class="pull-right">Timezone: {{ issue.store.timezone }}</div>
+    </div>
+    <div class="info-data info-address">
+        <div class="pull-left">Address:</div>
+        <div class="pull-right">
+            {{ issue.store.address }} <br>
+            {{ issue.store.city }}, {{issue.store.state}} {{ issue.store.zip_code }}
+        </div>
+    </div>
+    <div class="info-data info-hours">
+        <div class="col-xs-4">Weekday:<br>{{issue.store.weekday_open}}-{{issue.store.weekday_close}}</div>
+        <div class="col-xs-4">Saturday:<br>{{issue.store.sat_open}}-{{issue.store.sat_close}}</div>
+        <div class="col-xs-4">Sunday:<br>{{issue.store.sun_open}}-{{issue.store.sun_close}}</div>
+    </div>
+    <div class="info-data">
+        <div class="pull-left">Current Time in Timezone:</div>
+        <div class="pull-right">14:20</div>
+    </div>
+    <div class="info-data"><div class="pull-left">Time Down:</div>
+        <div class="pull-right">00 hours 23 minute 51 seconds</div>
+    </div>
+    <div class="info-data">
+        <div class="alert-success text-center">Store is currently <strong>{{ issue.store.store_status }}</strong>
+        </div>
+    </div>
+    <div class="info-data info-hours">
+        <div class="col-xs-4">
+            <button class="btn btn-sm btn-success">Edit</button>
+        </div>
+        <div class="col-xs-4">
+            <button class="btn btn-sm btn-primary">Work On</button>
+        </div>
+        <div class="col-xs-4">
+            <button data-toggle="modal" data-target="#store-info-modal" data-store="1234" class="btn btn-sm btn-warning">More Info</button>
+        </div>
+    </div>
+</div>

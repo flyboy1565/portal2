@@ -1,0 +1,562 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='main col-lg-12'>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Issues Map</a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>                        
+                </button>
+                <div class="navbar-form navbar-left col-xs-4">
+                    <input type="text" placeholder="Store/DC Search" id='store-search' > 
+                </div>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+               {% if not user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <b id="login-title">Login</b> <span class="caret"></span>
+                    </a>
+                    <ul id="login-dp" class="dropdown-menu">
+                        <li>
+                            <div class="text-center">TeamNet Credentials</div>
+                            <div class="col-md-12">
+                                <form method="POST" action="/login/">
+                                  {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="sr-only" for="user">Teamnet User ID</label>
+                                    <input class="form-control" id="user" placeholder="User ID">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="pword">Teamnet Password</label>
+                                    <input type="password" class="form-control" id="pword" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <button type='submit' class="btn btn-primary btn-block">Sign in</button>
+                                </div>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <b id="login-title">{{user.username}}</b> <span class="caret"></span>
+                    </a>
+                    <ul id="login-dp" class="dropdown-menu">
+                        <li>
+                            <div class="col-md-12">
+                                <div>
+                                    Auto Log out in 12:32pm
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-md-12">
+                              <form method='POST' action="/logout/">
+                                <div class="form-group">
+                                    {% csrf_token %}
+                                    <button type='submit' class="btn btn-primary btn-block" >Logout</button>
+                                </div>
+                              </form> 
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav nav-pills">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"> Issue Map <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a data-map-type="all" href="#map">All Issues <span class='badge pull-right'>0</span></a></li>
+                            <li role='separator' class='divider'></li>
+                            <li><a data-map-type="as400" href="#map">AS400 Down <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="linux" href="#map">Linux Down <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="comm" href="#map">Comm Issues <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="sna" href="#map">SNA Issues <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="uncategorized" href="#map">Uncategorized <span class='badge pull-right'>0</span></a></li>
+                            <li role='separator' class='divider'></li>
+                            <li>
+                              <div class='multi-item-holder row'>
+                                <input type='checkbox' id='cdk_chbox' class='pull-left'>
+                                <a data-map-type="cdk" href="#map">CDK Sites</a>
+                                <button class='btn btn-xs pull-right'>
+                                  <i class='glyphicon glyphicon-list-alt'></i>
+                                </button>
+                              </div>
+                            </li>
+                            <li>
+                              <div class='multi-item-holder row'>
+                                <input type='checkbox' id='dcs_chbox' class='pull-left'>
+                                <a data-map-type="dc/routers" href="#map">DC/Routers</a>
+                                <button class='btn btn-xs pull-right'>
+                                  <i class='glyphicon glyphicon-list-alt'></i>
+                                </button>
+                              </div>
+                            </li>
+                            <li>
+                              <div class='multi-item-holder row'>
+                                <input type='checkbox' id='newstore_chbox' class='pull-left'>
+                                <a data-map-type="new" href="#map">New Stores</a>
+                                <button class='btn btn-xs pull-right'>
+                                  <i class='glyphicon glyphicon-list-alt'></i>
+                                </button>
+                              </div>
+                            </li>
+                            <li role='separator' class='divider'></li>
+                            <li>
+                              <div class='text-center'>
+                                <input type='checkbox' id='#recenter'>
+                                <a data-map-type="all" href="#map">Re-Center Map</a>
+                              </div>  
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a data-toggle="pill" href="#comm-monitor">Comm. Monitor</a></li>
+                    <li class="dropdown email-counts">
+                        <a class="dropdown-toggle" data-toggle="dropdown"> Email Counts <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li data-provider='accel'><a href="#"> Accel <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='att'><a href="#"> ATT <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='cybera'><a href="#"> Cybera <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='mettel'><a href="#"> MetTel <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='windstream'><a href="#"> Windstream <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider=vonage><a href="#"> Vonage <span class='badge pull-right'>0</span></a></li>
+                            <li role='separator' class='divider'></li>
+                            <li data-provider='cog'><a href="#"> COG Support <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='comm'><a href="#"> Comm Notification <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='online'><a href="#"> Online Store <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='mplus'><a href="#"> MPlus <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='xmit'><a href="#"> Xmit Audit <span class='badge pull-right'>0</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a data-toggle='pill' href='#additional_issues'>Additional Issues</a></li>
+                    <li><a data-toggle="pill" href="#reports"> Reports </a></li>
+                    <li><a target='_blank' href="http://supporter/">The Supporter</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id='main-tab' class="tab-content">
+      <div id="map" class="tab-pane fade in active">
+        <div id='map_container'></div>
+        <button class='list-btns btn btn-primary btn-xs' data-target='#store-issue-list' data-toggle='tooltip' data-placement="auto" title='Store Issues'>
+          <i class='glyphicon glyphicon-triangle-left'></i>
+        </button>
+        <button class='list-btns btn btn-primary btn-xs' data-target='#alert-pane' data-toggle='tooltip' data-placement="auto" title='Notifications'>
+          <i class='glyphicon glyphicon-triangle-left'></i>
+        </button>
+        <button class='list-btns btn btn-primary btn-xs' data-target='#shsg-pane' data-toggle='tooltip' data-placement="auto" title='Team Activity'>
+          <i class='glyphicon glyphicon-triangle-left'></i>
+        </button>
+        <div id='store-issue-list' class='peek-a-do col-sm-8 col-md-4 col-lg-4'>
+          <h4>Store Issues</h4>
+          <div class='store-issues-filter'>
+            <button class='btn btn-sm btn-primary' data-target='.glyphicon-signal'>
+              <i class='glyphicon glyphicon-signal'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-server'>
+              <i class='glyphicon fa fa-server'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-linux'>
+              <i class='glyphicon fa fa-linux'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-question'>
+              <i class='glyphicon fa fa-question'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-exchange'>
+              <i class='glyphicon fa fa-exchange'></i>
+            </button>
+          </div>
+          <table class='table table-bordered'>
+            <thead>
+            <tr>
+              <th></th>
+              <th>Store</th>
+              <th>Down Since</th>
+              <th>Last Check</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div id='alert-pane' class='peek-a-do container col-sm-8  col-md-4 col-lg-4'>
+          <h4>Notifications</h4>
+          <div class='alert alert-danger'>
+            <div class='notification-date'><span class='pull-right'>12:45 1/12</span></div>
+            <span>DC5 is down </span>
+            <button class='btn btn-success btn-xs'>Acknowledge</button>
+          </div>
+          <div class='alert alert-info'>
+            <div class='notification-date'><span class='pull-right'>12:45 1/12</span></div>
+            <div class='notification-message'><span>Voicemail for 9999 </span></div>
+            <div class='notification-action'><button class='btn btn-success btn-xs pull-right'>Work On</button> </div>
+          </div>
+          <div class='alert alert-success'>
+            <span><strong>Update </strong>DC5 Down - JHOLSTINE is working on it.</span>
+            <button class='btn btn-success btn-xs'>Work On</button>
+          </div>
+        </div>
+        <div id='shsg-pane' class='peek-a-do container col-sm-8  col-md-4 col-lg-4'>
+          <h4>Activity</h4>
+          <div class='shsg-activity'>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-searches'>Searches</button>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-work-on'>Working On</button>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-confirmed'>Confirmed</button>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-completed'>Completed</button>
+          </div>
+          <div class='list-group shsg-activity-list'>
+            <li data-order='3' id='activity_3' class='list-group-item shsg-work-on'>JHOLSTINE is working on Comm Issue for 1234</li>
+            <li data-order='2' id='activity_2' class='list-group-item shsg-work-on'>
+              <div class='activity-date'>
+                <span class='pull-right'>11:45 12/12</span>
+              </div>
+              <div>JHOLSTINE is working on Comm Issue for 1234</div>
+              <div class='activity-action'>
+                <span class='btn btn-xs btn-primary pull-right'>Reset</span>
+              </div>
+            </li>
+            <li data-order='1' id='activity_1' class='list-group-item shsg-searches'>
+              <div class='row activity-date'>11:45 12/12 </div>
+              <div class='row'>JHOLSTINE searched for 1234</div>
+            </li>
+          </div>
+        </div>
+      </div>
+      <div id='comm-monitor' class="tab-pane fade in">
+        <div id='comm-monitor_container'>
+          <div class='comm-monitor-filter'>
+            <button class="btn btn-primary" data-target=".glyphicon-signal">
+              <i class="glyphicon glyphicon-signal"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-server">
+              <i class="glyphicon fa fa-server"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-linux">
+              <i class="glyphicon fa fa-linux"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-question">
+              <i class="glyphicon fa fa-question"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-exchange">
+              <i class="glyphicon fa fa-exchange"></i>
+            </button>
+          </div>
+          <table class='table table-responsive table-bordered'>
+            <thead>
+            <tr>
+              <th class='text-center'>Store/DC</th>
+              <th class='full-mode text-center'>State </th>
+              <th class='full-mode text-center'>Vendor </th>
+              <th class='full-mode text-center'>Ticket </th>
+              <th class='full-mode text-center'>Issue </th>
+              <th class='full-mode text-center'>Last Check </th>
+              <th class='full-mode text-center'>Down Since </th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='AS400 Server'>.1</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='Cisco 800 Port FE0'>.3</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='VQ Edge'>.4</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='T1'>.5</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='System Console'>.10</span></th>
+              <th class='dot_status text-center full-mode'><span data-toggle="tooltip" title='SPX Tester'>.14</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='Cisco 800 Port FE1'>.129</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='ESXI'>.250</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='MMR/ILO/IMM'>.253</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='Linux VM'>.254</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='SNA'>SNA</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id='additional_issues' class='tab-pane fade in'>
+        <div id='additional_issues_container'>
+          <table class='table table-bordered'>
+            <thead>
+            <tr>
+              <th>Issue</th>
+              <th>Status</th>
+              <th class='full-mode'>Time Till Expiration</th>
+              <th class='full-mode'>Added On</th>
+              <th class='full-mode'>Added By</th>
+              <th>Effected Systems</th>
+              <th class='full-mode'>Ticket</th>
+              <th><button class='btn btn-primary'>Add New</button></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <th>DC Maintenance</th>
+              <th>Monitoring</th>
+              <th class='full-mode'>5 hours</th>
+              <th class='full-mode'>11:34 12/2</th>
+              <th class='full-mode'>JHOLSTINE</th>
+              <th>DC 5, 25</th>
+              <th class='full-mode'>234444, 233455</th>
+              <th><button class='btn btn-primary'>Work On</button><button class='btn btn-danger'><i class='glyphicon glyphicon-remove'></i></button></th>
+            </tr>
+            <tr>
+              <th>Banking System Down</th>
+              <th>Active</th>
+              <th class='full-mode'>1 day</th>
+              <th class='full-mode'>11:34 12/5</th>
+              <th class='full-mode'>JHOLSTINE</th>
+              <th>All Stores</th>
+              <th class='full-mode'>55555555</th>
+              <th><button class='btn btn-primary'>Work On</button><button class='btn btn-danger'><i class='glyphicon glyphicon-remove'></i></button></th>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id='reports' class="tab-pane fade in"></div>
+    </div>
+    <div id="store-info-modal" class="modal fade" role="dialog" data-keyboard="true">
+      <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title text-center">Store/DC Search</h4>
+          </div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#stores_info">Store Info</a></li>
+              <li><a data-toggle="tab" href="#circuit_info">Circuit Info</a></li>
+              <li><a data-toggle="tab" href="#phone_lines">Phone Lines</a></li>
+              <li><a data-toggle="tab" href="#down_history">Down History</a></li>
+              <li><a data-toggle="tab" href="#ticket_history">Ticket History</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="stores_info" class="tab-pane fade in active">
+                <div>
+                  <div class="col-md-6">
+                    <div class="panel panel-primary supply">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">District/Region/Division/Hub/Supply</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>District</div><div class='pull-right'> 315 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Region</div><div class='pull-right'> 34 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Division</div><div class='pull-right'> 3 </div></li>
+                          <li class="divider"></li>
+                          <li class='list-group-item'><div class='pull-left'>Hub</div><div class='pull-right'> 3114 </div></li>
+                          <li class="divider"></li>
+                          <li class='list-group-item'><div class='pull-left'>DC</div><div class='pull-right'> 23 </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="panel panel-success pinger">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Pinging Tool</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body pinger-body">
+                        <div id="ping-row" class="row">
+                          <div class='col-xs-2'><span class="badge dot_status badge-danger" data-toggle="tooltip" title="AS400">.1</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="FEO - Cisco">.3</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="VQ Edge">.4</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="T1">.5</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="System Console">.10</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="SPX Tester">.14</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="FE1 - High Side">.129</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="ESXI - VMware">.250</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="MMR/ILO">.253</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="Linux">.254</span></div>
+                        </div>
+                        <div class='row text-center'>
+                          <button class='btn btn-primary cping btn-sm' data-store=null>Ping Again</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="col-md-6">
+                    <div class="panel panel-primary location">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Address</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body">
+                        <label>153 12st Rd</label><br><label>Paso Robles Ca 93446</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="panel panel-primary hours">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Store Hours</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body pinger-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>Week Days</div><div class='pull-right'> 700-2200</div></li>
+                          <li class='list-group-item'><div class='pull-left'>Saturday</div><div class='pull-right'> 700-2200</div></li>
+                          <li class='list-group-item'><div class='pull-left'>Sunday</div><div class='pull-right'> 700-2200</div></li>
+                          <li class='list-group-item'><div class='pull-left'>Time Zone</div><div class='pull-right'> PST </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="col-md-6">
+                    <div class="panel panel-primary servers">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Server Info</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>Server Type:</div><div class='pull-right'> 8203 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Serial Number:</div><div class='pull-right'> 123456 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Tape Drive Type:</div><div class='pull-right'> 5907 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Serial Number:</div><div class='pull-right'> 123456 </div></li>
+                          <li class="divider"></li>
+                          <li class='list-group-item'><div class='pull-left'>Server Type:</div><div class='pull-right'> ML110 G7 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Serial Number:</div><div class='pull-right'> USE1235DT23 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>HD Type:</div><div class='pull-right'> 5756456-001 </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="panel panel-primary tickets">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Open Tickets</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body pinger-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>13245</div><div class='pull-right'>Legacy</div></li>
+                          <li class='list-group-item'><div class='pull-left'>345</div><div class='pull-right'> Hardware</div></li>
+                          <li class='list-group-item'><div class='pull-left'>2345</div><div class='pull-right'> Requeue</div></li>
+                          <li class='list-group-item'><div class='pull-left'>23452</div><div class='pull-right'> Hangup </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="circuit_info" class="tab-pane fade">
+                <div>
+                  <table class='table table-bordered'>
+                    <tr>
+                      <th>Info</th>
+                      <th>Data</th>
+                    </tr>
+                    <tr>
+                      <td>Carrier:</td><td>Telesphere</td>
+                    </tr>
+                    <tr>
+                      <td>Carrier Type:</td><td>DYT1 VQ</td>
+                    </tr>
+                    <tr>
+                      <td>IP:</td><td>.3 & .5</td>
+                    </tr>
+                    <tr>
+                      <td>Router Type:</td><td>isco 887/Adtran</td>
+                    </tr>
+                    <tr>
+                      <td>Circuit or ISDN SPIDs:</td><td>08.HCRU.000013..ALPH Accel LTE</td>
+                    </tr>
+                    <tr>
+                      <td>DLCIs VIP/VCI:</td><td>N/A</td>
+                    </tr>
+                    <tr>
+                      <td>Add. Cir. Numbers:</td><td>84/HCGS/039372//SW</td>
+                    </tr>
+                    <tr>
+                      <td>Serivce Number:</td><td>877 825 3409</td>
+                    </tr>
+                    <tr>
+                      <td>Special Call. Instr.:</td><td>VIPSupport@telesphere.com</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div id="phone_lines" class="tab-pane fade">
+                <table class='table table-bordered'>
+                  <tr>
+                    <th>Line #</th>
+                    <th>Phone #</th>
+                    <th>Type</th>
+                  </tr>
+                  <tr>
+                    <td>Main</td>
+                    <td>(555) 555-55555</td>
+                    <td>HG1
+                  </tr>
+                </table>
+              </div>
+              <div id="down_history" class="tab-pane fade">
+                <table class='table table-bordered table-fixed'>
+                  <thead>
+                  <tr>
+                    <th class='col-sm-6'>Date and Time</th>
+                    <th class='col-sm-6'>Category</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr><td class='col-sm-6'>12/13/16 18:00</td><td class='col-sm-6'>Unknown</td></tr>
+                  <tr><td class='col-sm-6'>12/12/16 18:20</td><td class='col-sm-6'>Unknown</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="ticket_history" class="tab-pane fade">
+                <div id='ticket_history_sub'>
+                  <table class='table table-bordered table-fixed'>
+                    <thead>
+                    <tr>
+                      <th class='col-sm-1'>Ticket #</th>
+                      <th class='col-sm-2'>Contact</th>
+                      <th class='col-sm-3'>Title</th>
+                      <th class='col-sm-2'>Category</th>
+                      <th class='col-sm-2'>Status</th>
+                      <th class='col-sm-2'>Assignees</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td class='col-sm-1'><a href="#">12344</a></td>
+                      <td class='col-sm-2'>Jow</td>
+                      <td class='col-sm-3'>This is on a simple title info</td>
+                      <td class='col-sm-2'>Legacy</td>
+                      <td class='col-sm-2'>Closed</td>
+                      <td class='col-sm-2'>JHOLSTINE</td>
+                    </tr>
+                    <tr>
+                      <td class='col-sm-1'><a href="#">12344</a></td>
+                      <td class='col-sm-2'>Jow</td>
+                      <td class='col-sm-3'>This is on a simple title infoThis is on a simple title infoThis is on a simple title info</td>
+                      <td class='col-sm-2'>Legacy</td>
+                      <td class='col-sm-2'>Closed</td>
+                      <td class='col-sm-2'>JHOLSTINE</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
