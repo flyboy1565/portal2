@@ -1,0 +1,44 @@
+<table class='table table-responsive table-bordered table-hover table-fixed'>
+    <thead>
+        <tr>
+            <th class='col-sm-1'>Kit#</<th>
+            <th class='col-sm-1'>Carrier</<th>
+            <th class='col-sm-1'>Modem IP</<th>
+            <th class='col-sm-1'>Tunnel 200 IP</<th>
+            <th class='col-sm-1'>Tunnel 500 IP</<th>
+            <th class='col-sm-1'>Store</<th>
+            <th class='col-sm-1'>Date Sent</<th>
+            <th class='col-sm-1'>Ticket</<th>
+            <th class='col-sm-1'>Tracking to Store</<th>
+            <th class='col-sm-1'>Tracking to HS</<th>
+            <th class='col-sm-1'>Return Requested</<th>
+            <th class='col-sm-1'> Status </<th>
+        </tr>
+    </thead>
+{% if kits %}
+    {% for kit in kits %}
+    <tr class='cdk_line'>
+        <td class='col-sm-1 text-center'>
+            <a href='{% url "kit" kit.pk %}'>{{kit.kit_number}}</a>
+        </td>
+        <td>{{ kit.carrier }}</td>
+        <td class='col-sm-1'>
+            {{ kit.modem_ip }}
+        </td>
+        <td class='col-sm-1'> {{ kit.tunnel_200 }} </td>
+        <td class='col-sm-1'> {{ kit.tunnel_500 }} </td>
+        <td class='col-sm-1'> {{ kit.shipping.at_store }} </td>
+        <td class='col-sm-1'> {{ kit.shipping.ticket_number }} </td>
+        <td class='col-sm-1'> {{ kit.shipping.shipped_date }} </td>
+        <td class='col-sm-1'> {{ kit.shipping.tracking_number_to_store }} </td>
+        <td class='col-sm-1'> {{ kit.shipping.tracking_number_to_help_support }} </td>
+        <td class='col-sm-1'> {{ kit.shipping.return_requested_on }} </td>
+        <td class='col-sm-1'> {{ kit.shipping.status }} </td>
+    </tr>
+    {% endfor %}
+{% else %}
+    <tr class='cdk_line'>
+        <td colspan=11> No Kits        </td>
+    </tr>
+{% endif %}
+</table>

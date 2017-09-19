@@ -5,11 +5,13 @@ from .views import (
     StoreDetailAPIView, StoreListAPIView, 
     DistrictDetailAPIView, DistrictListAPIView,
     RegionDetailAPIView, RegionListAPIView,
-    DivisionListAPIView, DivisionDetailAPIView
+    DivisionListAPIView, DivisionDetailAPIView,
+    NewStoreListAPIView,
 )
   
 
 urlpatterns = [
+    url(r'^new_stores/$', NewStoreListAPIView.as_view(), name='new_stores'),
     url(r'^stores/$', StoreListAPIView.as_view(), name='store-list'),
     url(r'^stores/(?P<store_number>[\w-]+)/$', StoreDetailAPIView.as_view(), name='store-detail'),
     url(r'^district/$', DistrictListAPIView.as_view(), name='district-list'),

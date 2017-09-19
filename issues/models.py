@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 from locations.models import Store
 from circuits.models import Circuit
+from phones.models import PhoneLine
 
 from .choices import issues_choices
 
@@ -30,7 +31,7 @@ class CommunicationsIssue(models.Model):
     def total_time_down(self):
         if self.resolved is False:
             return (timezone.now() - self.down_since).total_seconds()
-        return (self.resolved_time - self.down_since).total_seconds
+        return (self.resolved_time - self.down_since).total_seconds()
         
     @property
     def icon(self):
@@ -41,10 +42,10 @@ class CommunicationsIssue(models.Model):
             color = 'blue'
         elif self.ticket is not None:
             color = 'purple'
+        if self.issue == 'PC':
+            self.issue = 'P'
         return [color, self.issue]
         
-        
-    
     @property    
     def workon(self):
         return WorkOn.objects.filter(issue_id=self).last()
@@ -52,6 +53,10 @@ class CommunicationsIssue(models.Model):
     @property    
     def circuits(self): 
         return Circuit.objects.filter(store__store_number=self.store.store_number,circuit_type='P').last()
+        
+    @property
+    def phone(self):
+        return PhoneLine.objects.filter(store__store_number=self.store.store_number,phone_type='S').first()
         
         
 class WorkOn(models.Model):

@@ -77,6 +77,20 @@ def add_locations():
     store.store_status = 'Open'
     store.save()
     
+    print ('Creating Store 2811')
+    store = Store()
+    store.store_number = 2811
+    store.three_letter_code = 'ST1'
+    store.system_name = 'A2811ST1'
+    store.longitude = -120.4364800
+    store.latitude = 34.9224280
+    store.state = 'CA'
+    store.district = district
+    store.dma = dma
+    store.dc = dc
+    store.store_status = 'Open'
+    store.save()
+    
 def add_vendors():
     print('Creating Vendor 1')
     v1 = Vendor()
@@ -102,20 +116,28 @@ def add_circuits():
     circuit.communications_type = CommunicationsType.objects.all()[0]
     circuit.circuit_type = 'P'
     circuit.save()
+    
+    circuit = Circuit()
+    circuit.store = Store.objects.get(pk=2583)
+    circuit.primary_vendor = Vendor.objects.all()[0]
+    circuit.primary_circuit_id = 'A345-12'
+    circuit.communications_type = CommunicationsType.objects.all()[0]
+    circuit.circuit_type = 'P'
+    circuit.save()
+    
+    circuit = Circuit()
+    circuit.store = Store.objects.get(pk=2811)
+    circuit.primary_vendor = Vendor.objects.all()[0]
+    circuit.primary_circuit_id = 'A3aer2345'
+    circuit.communications_type = CommunicationsType.objects.all()[0]
+    circuit.circuit_type = 'P'
+    circuit.save()
 
 def add_phones():
     tag = PhoneTag()
     tag.tag = 'HG1'
     tag.description = 'Hunt Group 1'
     tag.save()
-    
-    line = PhoneLine()
-    line.store = Store.objects.get(store_number=2942)
-    line.line_number = 1
-    line.phone_number = '5555555555'
-    line.tag = tag
-    line.phone_type = 'PTS'
-    line.save()
     
     equipment = PhoneEquipment()
     equipment.phone_equipment = 'NES'

@@ -78,3 +78,11 @@ class DivisionDetailSerializer(ModelSerializer):
     def get_regions(self, obj):
         queryset = Region.objects.filter(division=obj.division_number)
         return DistrictListSerializer(queryset, many=True, context=self.context).data  
+        
+        
+class NewStoreListSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Store
+        fields = '__all__'
+    

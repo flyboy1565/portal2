@@ -78,8 +78,10 @@ class Division(models.Model):
 
 class DistrbutionCenter(models.Model):
     dc_number = models.IntegerField(primary_key=True)
+    longitude = models.DecimalField(max_digits=11, decimal_places=8)
+    latitude = models.DecimalField(max_digits=11, decimal_places=8)
     manager_name = models.CharField(max_length=100, blank=True, null=True)
-    store_off_dc = models.ForeignKey('Store', blank=True, null=True)        
+    store_off_dc = models.ForeignKey('Store', blank=True, null=True)
     dc_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):

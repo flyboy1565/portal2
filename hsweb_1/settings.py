@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'accounts',
     'circuits',
     'vendors',
+    'cdks',
+    'devices',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -73,7 +75,7 @@ ROOT_URLCONF = 'hsweb_1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR],
+        'DIRS': [BASE_DIR, os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,12 +134,16 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = ( 
+      os.path.join(BASE_DIR, 'static'),  
+)
 
 # http://www.django-rest-framework.org/api-guide/permissions/
 # REST_FRAMEWORK = {

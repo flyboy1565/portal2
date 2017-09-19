@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework.generics import ListAPIView, UpdateAPIView, RetrieveAPIView
 
 from locations.models import Store, District, Region, Division, DistrbutionCenter, DMA
@@ -7,6 +9,7 @@ from .serializers import (
         DistrictListSerializer, DistrictDetailSerializer,
         RegionListSerializer, RegionDetailSerializer,
         DivisionListSerializer, DivisionDetailSerializer,
+        NewStoreListSerializer,
 )
 
 
@@ -50,3 +53,9 @@ class DivisionDetailAPIView(RetrieveAPIView):
     queryset = Division.objects.all()
     serializer_class = DivisionDetailSerializer
     lookup_field = 'division_number'
+    
+    
+class NewStoreListAPIView(ListAPIView):
+    queryset = Store.objects.filter(open_date__gt=timezone.now())
+    serializer_class = NewStoreListSerializer
+    

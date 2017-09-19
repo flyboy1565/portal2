@@ -16,11 +16,33 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.shortcuts import render
+from django.conf import settings
+from django.contrib.auth import views as auth_views
+
+
+def index(request):
+    return render(request, 'index.html', {})
+
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    # api 
     url(r'^api/locations/', include('locations.api.urls')),
     url(r'^api/phones/', include('phones.api.urls')),
     url(r'^api/issues/', include('issues.api.urls')),
-    url(r'^', include('accounts.urls', namespace='accounts')),
+    url(r'^api/kits/', include('cdks.api.urls')),
+    # html 
+    url(r'^admin/', admin.site.urls),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
+    url(r'^cdks/', include('cdks.urls')),
+    url(r'^devices/', include('devices.urls')),
+    url(r'^issues/', include('issues.urls')),
+    url(r'login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
+    url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
+    url(r'^$', index, name='home'),
 ]
+
+
+if settings.DEBUG:
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+urlpatterns += staticfiles_urlpatterns()

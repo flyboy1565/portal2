@@ -113,3 +113,5 @@ migrations/
 
 # Ignore API Template
 template_api/
+
+static/
