@@ -1,0 +1,235 @@
+<div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title text-center">Store/DC Search</h4>
+          </div>
+          <div class="modal-body">
+            <ul class="nav nav-tabs">
+              <li class="active"><a data-toggle="tab" href="#stores_info">{% if store.store_number < 100 %} DC {% else %} Store Info {% endif %}</a></li>
+              <li><a data-toggle="tab" href="#phone_lines">Phone Lines</a></li>
+              <li><a data-toggle="tab" href="#down_history">Down History</a></li>
+              <li><a data-toggle="tab" href="#ticket_history">Ticket History</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="stores_info" class="tab-pane fade in active">
+                <div>
+                  <div class="col-sm-6 col-md-4">
+                    <div class="panel panel-success pinger">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Pinging Tool</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body pinger-body">
+                        <div id="ping-row" class="row">
+                          <div class='col-xs-2'><span class="badge dot_status badge-danger" data-toggle="tooltip" title="AS400">.1</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="FEO - Cisco">.3</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="VQ Edge">.4</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="T1">.5</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="System Console">.10</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="SPX Tester">.14</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="FE1 - High Side">.129</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="ESXI - VMware">.250</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="MMR/ILO">.253</span></div>
+                          <div class='col-xs-2'><span class="badge dot_status badge-success" data-toggle="tooltip" title="Linux">.254</span></div>
+                        </div>
+                        <div class='row text-center'>
+                          <button class='btn btn-primary cping btn-sm' data-store=null>Ping Again</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <div class="panel panel-primary location">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Address</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body">
+                        <label>{{ store.address }}</label><br><label>{{ store.city }}, {{ store.state }} {{ store.zip_code }}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <div class="panel panel-primary hours">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Store Hours</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body pinger-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>Week Days</div><div class='pull-right'> {{ store.weekday_open }}-{{ store.weekday_close }}</div></li>
+                          <li class='list-group-item'><div class='pull-left'>Saturday</div><div class='pull-right'> {{ store.sat_open }}-{{ store.sat_close }}</div></li>
+                          <li class='list-group-item'><div class='pull-left'>Sunday</div><div class='pull-right'> {{ store.sun_open }}-{{ store.sun_close }}</div></li>
+                          <li class='list-group-item'><div class='pull-left'>Time Zone</div><div class='pull-right'> {{ store.timezone }} </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <div class="panel panel-primary supply">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">District/Region/Division/Hub/Supply</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>District</div><div class='pull-right'> {{ store.district.district_number }} </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Region</div><div class='pull-right'> {{ store.district.region.region_number }} </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Division</div><div class='pull-right'> {{ store.district.region.division.division_number }} </div></li>
+                          <li class="divider"></li>
+                          <li class='list-group-item'><div class='pull-left'>Hub</div><div class='pull-right'> {{ store.hub }} </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Store Is a Hub</div><div class='pull-right'> {% if store.is_hub %} YES {% else %} NO {% endif %} </div></li>
+                          <li class="divider"></li>
+                          <li class='list-group-item'><div class='pull-left'>DC</div><div class='pull-right'> {{ store.dc }} </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <div class="panel panel-primary servers">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Server Info</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>Server Type:</div><div class='pull-right'> 8203 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Serial Number:</div><div class='pull-right'> 123456 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Tape Drive Type:</div><div class='pull-right'> 5907 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Serial Number:</div><div class='pull-right'> 123456 </div></li>
+                          <li class="divider"></li>
+                          <li class='list-group-item'><div class='pull-left'>Server Type:</div><div class='pull-right'> ML110 G7 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>Serial Number:</div><div class='pull-right'> USE1235DT23 </div></li>
+                          <li class='list-group-item'><div class='pull-left'>HD Type:</div><div class='pull-right'> 5756456-001 </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <div class="panel panel-primary tickets">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">Open Tickets</h3>
+                        <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                      </div>
+                      <div class="panel-body pinger-body">
+                        <ul class='list-group'>
+                          <li class='list-group-item'><div class='pull-left'>13245</div><div class='pull-right'>Legacy</div></li>
+                          <li class='list-group-item'><div class='pull-left'>345</div><div class='pull-right'> Hardware</div></li>
+                          <li class='list-group-item'><div class='pull-left'>2345</div><div class='pull-right'> Requeue</div></li>
+                          <li class='list-group-item'><div class='pull-left'>23452</div><div class='pull-right'> Hangup </div></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Communications Info</h3>
+                            <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                <ul class="list-group">
+                                    <li class="list-group-item clearfix"><div class="pull-left">Vendor</div><div class="pull-right">Windstream</div></li>
+                                    <li class="list-group-item clearfix"><div class="pull-left">Comm Type</div><div class="pull-right"> Dynamic T1</div></li>
+                                    <li class="list-group-item clearfix"><div class="pull-left">Confluence Troubleshooting</div><div class="pull-right"><a href="https://confluence.oreillyauto.com/confluenceweb/display/ISHelpSupport/CHS+-+Dynamic+T1+Troubleshooting" target="_blank">Link</a></div></li>
+                                    <li class="list-group-item clearfix"><div class="pull-left">Last Checked</div><div class="pull-right"> 2017-04-25 23:47:01 </div></li>
+                                </ul>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              </div>
+              <div id="phone_lines" class="tab-pane fade">
+                <table class='table table-bordered'>
+                  <tr>
+                    <th>Line #</th>
+                    <th>Phone #</th>
+                    <th>Tags</th>
+                    <th>Type</th>
+                  </tr>
+                  {% for phone in phones %}
+                  <tr>
+                    <td>{{ phone.line_number }}</td>
+                    <td>{{ phone.phone_number }}</td>
+                    <td>{{ phone.get_tag_display }}</td>
+                    <td>{{ phone.get_phone_type_display }}</td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
+              <div id="down_history" class="tab-pane fade">
+                <table class='table table-bordered table-fixed'>
+                  <thead>
+                  <tr>
+                    <th class='col-sm-6'>Date and Time</th>
+                    <th class='col-sm-6'>Category</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr><td class='col-sm-6'>12/13/16 18:00</td><td class='col-sm-6'>Unknown</td></tr>
+                  <tr><td class='col-sm-6'>12/12/16 18:20</td><td class='col-sm-6'>Unknown</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div id="ticket_history" class="tab-pane fade">
+                <div id='ticket_history_sub'>
+                  <table class='table table-bordered table-fixed'>
+                    <thead>
+                    <tr>
+                      <th class='col-sm-1'>Ticket #</th>
+                      <th class='col-sm-2'>Contact</th>
+                      <th class='col-sm-3'>Title</th>
+                      <th class='col-sm-2'>Category</th>
+                      <th class='col-sm-2'>Status</th>
+                      <th class='col-sm-2'>Assignees</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td class='col-sm-1'><a href="#">12344</a></td>
+                      <td class='col-sm-2'>Jow</td>
+                      <td class='col-sm-3'>This is on a simple title info</td>
+                      <td class='col-sm-2'>Legacy</td>
+                      <td class='col-sm-2'>Closed</td>
+                      <td class='col-sm-2'>JHOLSTINE</td>
+                    </tr>
+                    <tr>
+                      <td class='col-sm-1'><a href="#">12344</a></td>
+                      <td class='col-sm-2'>Jow</td>
+                      <td class='col-sm-3'>This is on a simple title infoThis is on a simple title infoThis is on a simple title info</td>
+                      <td class='col-sm-2'>Legacy</td>
+                      <td class='col-sm-2'>Closed</td>
+                      <td class='col-sm-2'>JHOLSTINE</td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+  </div>
+<script>
+    $(document).ready(function(){
+        $('.panel-heading').click(function(e){
+            var $this = $(this);
+            if(!$this.hasClass('panel-collapsed')) {
+                $this.parents('.panel').find('.panel-body').slideUp();
+                $this.addClass('panel-collapsed');
+                $this.find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+            } else {
+                $this.parents('.panel').find('.panel-body').slideDown();
+                $this.removeClass('panel-collapsed');
+                $this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+            }
+        });
+    })
+</script>
