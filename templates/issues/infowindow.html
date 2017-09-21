@@ -1,0 +1,66 @@
+<div id="infowindow-content">
+    <div class="info-header text-center alert-danger"><h4> {{issue.get_issue_display}}</h4></div>
+    <div class="info-header text-center alert-info"><h5>Store {{ issue.store.store_number }}</h5></div>
+    <div class="info-data">
+        <div class="pull-left">Vendor: {{ circuit.primary_vendor.vendor_name }}</div>
+        <div class="pull-right">Communication Type: {{ circuit.communications_type.comm_type }}</div>
+    </div>
+    <div class="info-data">
+        <div class="pull-left">Ticket:</div>
+        <div class="pull-right"><a href='#'>645648</a>, <a href='#'>645648</a>, <a href='#'>645648</a></div>
+    </div>
+    <div class="info-data">
+        <div class="pull-left">POTS Line: {{ pots.phone_number }}</div>
+        <div class="pull-right current_time_zone">Timezone: {{ issue.store.timezone }}</div>
+    </div>
+    <div class="info-data info-address">
+        <div class="pull-left">Address:</div>
+        <div class="pull-right">
+            {{ issue.store.address }} <br>
+            {{ issue.store.city }}, {{issue.store.state}} {{ issue.store.zip_code }}
+        </div>
+    </div>
+    <div class="info-data info-hours">
+        <div class="col-xs-4">Weekday:<br>{{issue.store.weekday_open| time:"H:i"}}-{{issue.store.weekday_close| time:"H:i"}}</div>
+        <div class="col-xs-4">Saturday:<br>{{issue.store.sat_open| time:"H:i"}}-{{issue.store.sat_close| time:"H:i"}}</div>
+        <div class="col-xs-4">Sunday:<br>{{issue.store.sun_open| time:"H:i"}}-{{issue.store.sun_close| time:"H:i"}}</div>
+    </div>
+    <div class="info-data">
+        <div class="pull-left">Current Time in Timezone:</div>
+        <div class="pull-right current_time"></div>
+    </div>
+    <div class="info-data"><div class="pull-left">Time Down:</div>
+        <div id='down-since' class="pull-right" data-down-since="{{ issue.down_since|date:'c' }}"></div>
+    </div>
+    <div class="info-data">
+        <div class="alert-success text-center">Store is currently <strong>{{ issue.store.store_status }}</strong>
+        </div>
+    </div>
+    <div class="info-data info-hours">
+        <div class="col-xs-3">
+            {% if user.is_authenticated %}
+            <button id='edit-issue-button' data-toggle="modal" data-target="#edit-issue-modal" data-url='{% url "edit_issue" issue.pk %}' class="btn btn-sm btn-success">Edit</button>
+            {% else %}
+            <button class="btn btn-sm btn-danger">Login</button>
+            {% endif %}
+        </div>
+        <div class="col-xs-5">
+        {% if user.is_authenticated %}
+            {% if user == issue.workon.work_on_by %}
+            <button id='workon' data-url='{% url "workon-complete" issue.pk %}' class="btn btn-sm btn-primary">Complete</button>    
+            {% else %}
+            {% if user.profile.shsg and issue.workon %}
+            <button id='workon' data-url='{% url "workon-complete" issue.pk %}' class="btn btn-sm btn-primary">Cancel {{issue.workon.work_on_by}}</button>    
+            {% else %}
+            <button id='workon' data-url='{% url "workon" issue.pk %}' class="btn btn-sm btn-primary">Work On</button>
+            {% endif %}
+            {% endif %}    
+        {% else %}
+            <button class="btn btn-sm btn-danger">Login</button>
+        {% endif %}
+        </div>
+        <div class="col-xs-4">
+            <button data-toggle="modal" data-target="#store-info-modal" data-store="{{ issue.store.store_number }}" class="btn btn-sm btn-warning">More Info</button>
+        </div>
+    </div>
+</div>

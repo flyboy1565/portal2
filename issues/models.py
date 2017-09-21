@@ -36,19 +36,23 @@ class CommunicationsIssue(models.Model):
     @property
     def icon(self):
         color = 'red'
-        time_threshold = datetime.now() - timedelta(minutes=5)
-        workon = WorkOn.objects.filter(issue_id=self, work_on_at__lt=time_threshold).last()
+        time_threshold = timezone.now() - timedelta(minutes=5)
+        workon = WorkOn.objects.filter(issue_id=self, work_on_at__lt=time_threshold, completed=False).last()
         if workon is not None:
             color = 'blue'
         elif self.ticket is not None:
             color = 'purple'
         if self.issue == 'PC':
-            self.issue = 'P'
+            self.issue = 'C'
         return [color, self.issue]
         
     @property    
     def workon(self):
-        return WorkOn.objects.filter(issue_id=self).last()
+        time_threshold = timezone.now() - timedelta(minutes=5)
+        print(time_threshold)
+        now = timezone.now()
+        print(now)
+        return WorkOn.objects.filter(issue_id=self, work_on_at__range=(time_threshold, now), completed=False).last()
     
     @property    
     def circuits(self): 
@@ -63,6 +67,7 @@ class WorkOn(models.Model):
     issue_id = models.ForeignKey('CommunicationsIssue')
     work_on_by = models.ForeignKey(User)
     work_on_at = models.DateTimeField(auto_now_add=True)
+    completed = models.BooleanField(default=False)
     
     def __str__(self):
         return '{0} working on {1}-{2} for store {3} at {4}'.format(
@@ -72,6 +77,7 @@ class WorkOn(models.Model):
             self.issue_id.store.store_number, 
             self.work_on_at
             )
+            
             
             
             

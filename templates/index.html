@@ -48,13 +48,13 @@
                         <b id="login-title">{{user.username}}</b> <span class="caret"></span>
                     </a>
                     <ul id="login-dp" class="dropdown-menu">
-                        <li>
-                            <div class="col-md-12">
-                                <div>
-                                    Auto Log out in 12:32pm
-                                </div>
-                            </div>
-                        </li>
+                        {% if user.profile.shsg %}
+                        <ul class='list-group'>
+                          <li class='list-group-item text-center'>
+                              <a href='/admin/'>Admin</a>
+                          </li>
+                        </ul>
+                        {% endif %}
                         <li>
                             <div class="col-md-12">
                               <form method='POST' action="/logout/">
@@ -319,9 +319,8 @@
       </div>
       <div id='reports' class="tab-pane fade in"></div>
     </div>
-    <div id="store-info-modal" class="modal fade" role="dialog" data-keyboard="true">
-      
-    </div>
+    <div id="store-info-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
+    <div id="edit-issue-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
     <div id="data-info" class="modal fade" role="dialog">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">

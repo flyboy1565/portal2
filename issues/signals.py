@@ -8,9 +8,8 @@ from django.dispatch import receiver
 
 from channels import Group
 
-from .models import CommunicationsIssue
+from .models import CommunicationsIssue, WorkOn
 from .api.serializers import IssueSerializer
-
 
 
 logger = logging.getLogger(__name__).setLevel(logging.DEBUG)
@@ -18,6 +17,7 @@ logger = logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 def send_notification(notification):
     logging.debug('send_notification. notification = %s', notification)
+    print(notification)
     Group("users").send({'text': dumps(notification)})
 
 
@@ -32,3 +32,4 @@ def incident_post_save(sender, **kwargs):
         'resolved': obj.resolved,
         'feature': instance,
     })
+    
