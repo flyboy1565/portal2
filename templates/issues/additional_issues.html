@@ -1,0 +1,28 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+          <th>Issue</th>
+          <th>Status</th>
+          <th class="full-mode">Time Till Expiration</th>
+          <th class="full-mode">Added On</th>
+          <th class="full-mode">Added By</th>
+          <th>Effected Systems</th>
+          <th class="full-mode">Ticket</th>
+          <th><button class="btn btn-primary">Add New</button></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for issue in issues %}
+        <tr>
+          <th>{{ issue.description }}</th>
+          <th>{{ issue.get_status_display }}</th>
+          <th class="full-mode">{{ issue.expires_at }}</th>
+          <th class="full-mode">{{ issue.date_added }}</th>
+          <th class="full-mode">{{ issue.added_by }}</th>
+          <th>{{ issue.effected_systems }}</th>
+          <th class="full-mode">{{ issue.ticket_number }}</th>
+          <th><button class="btn btn-primary">Work On</button><button class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></button></th>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -9,36 +9,209 @@
             <th class='col-sm-1'>Store</<th>
             <th class='col-sm-1'>Date Sent</<th>
             <th class='col-sm-1'>Ticket</<th>
-            <th class='col-sm-1'>Tracking to Store</<th>
-            <th class='col-sm-1'>Tracking to HS</<th>
+            <th class='col-sm-1'>To Store</<th>
+            <th class='col-sm-1'>To HS</<th>
             <th class='col-sm-1'>Return Requested</<th>
             <th class='col-sm-1'> Status </<th>
         </tr>
     </thead>
-{% if kits %}
-    {% for kit in kits %}
-    <tr class='cdk_line'>
-        <td class='col-sm-1 text-center'>
-            <a href='{% url "kit" kit.pk %}'>{{kit.kit_number}}</a>
-        </td>
-        <td>{{ kit.carrier }}</td>
-        <td class='col-sm-1'>
-            {{ kit.modem_ip }}
-        </td>
-        <td class='col-sm-1'> {{ kit.tunnel_200 }} </td>
-        <td class='col-sm-1'> {{ kit.tunnel_500 }} </td>
-        <td class='col-sm-1'> {{ kit.shipping.at_store }} </td>
-        <td class='col-sm-1'> {{ kit.shipping.ticket_number }} </td>
-        <td class='col-sm-1'> {{ kit.shipping.shipped_date }} </td>
-        <td class='col-sm-1'> {{ kit.shipping.tracking_number_to_store }} </td>
-        <td class='col-sm-1'> {{ kit.shipping.tracking_number_to_help_support }} </td>
-        <td class='col-sm-1'> {{ kit.shipping.return_requested_on }} </td>
-        <td class='col-sm-1'> {{ kit.shipping.status }} </td>
-    </tr>
-    {% endfor %}
-{% else %}
-    <tr class='cdk_line'>
-        <td colspan=11> No Kits        </td>
-    </tr>
+    <tbody>
+    {% if kits %}
+        {% for kit in kits %}
+        <tr class='cdk_line'>
+            <!--   Kit Number    -->
+            <td class='col-sm-1 text-center'>
+                <a href='#' class='kit-detail' data-url='{% url "kit" kit.pk %}'>{{kit.kit_number}}</a>
+            </td>
+            <!--   Kit Carrier    -->
+            <td class='col-sm-1'>{{ kit.carrier }}</td>
+            <!--   Modem IP    -->
+            <td class='col-sm-1'>
+                {{ kit.modem_ip }}
+            </td>
+            <!--   Kit Tunnel 200   -->
+            <td class='col-sm-1'> {{ kit.tunnel_200 }} </td>
+            <!--   Kit Tunnel 500    -->
+            <td class='col-sm-1'> {{ kit.tunnel_500 }} </td>
+            <!--   Store Number    -->
+            <td class='col-sm-1'> 
+            {% if kit.shipping.at_store %}
+                <a href='#' class='search-link' data-store='{{ kit.shipping.at_store }}' data-url='{% url "store_search" kit.shipping.at_store %}'>
+                    {{ kit.shipping.at_store }} 
+                </a>
+            {% else %}
+                {% if kit.status != 'Lost' %}
+                <button class='btn btn-primary ship-link' data-url='{% url "new_shipment" kit.kit_number %}'>Ship</button>
+                {% endif %}
+            {% endif %}
+            </td>
+            <!--   Date Kit Shipped   -->
+            <td class='col-sm-1'> {{ kit.shipping.shipped_date|date:"m/d/y" }} </td>
+            <!--   Ticket Number    -->
+            <td class='col-sm-1'> {{ kit.shipping.ticket_number }} </td>
+            <!--   Shipping to Store    -->
+            <td class='col-sm-1'> 
+            {% if kit.shipping.tracking_number_to_store %}
+                <a data-toggle="tooltip" title="{{ kit.shipping.tracking_number_to_store }}" class='btn btn-sm' href="https://wwwapps.ups.com/tracking/tracking.cgi?tracknum={{ kit.shipping.tracking_number_to_store }}" target="_blank">{{ kit.shipping.tracking_number_to_store }}</a>
+            {% else %}
+                {% if kit.shipping %}    
+                <a class='add-tracking' href='#' data-header='Store' data-url='{% url "add_track" kit_id=kit.kit_number ship_type='to_store' %}'>Add Tracking</a>
+                {% endif %}
+            {% endif %}
+            </td>
+            <!--   Shipping to Store Support    -->
+            <td class='col-sm-1'>
+            {% if kit.shipping.tracking_number_to_help_support %}
+                <a data-toggle="tooltip" title="{{ kit.shipping.tracking_number_to_help_support }}" class='btn btn-sm' href="https://wwwapps.ups.com/tracking/tracking.cgi?tracknum={{ kit.shipping.tracking_number_to_help_support }}" target="_blank">{{ kit.shipping.tracking_number_to_help_support }}</a>
+            {% else %}
+                {% if kit.shipping %}    
+                <a class='add-tracking' data-header='Store Support' href='#' data-url='{% url "add_track" kit_id=kit.kit_number ship_type='to_hs' %}'>Add Tracking</a>
+                {% endif %}
+            {% endif %}
+            </td>
+            <!--   Return Request    -->
+            <td class='col-sm-1'> 
+            {% if kit.shipping %}
+                {% if kit.shipping.return_requested_on %}
+                {{ kit.shipping.return_requested_on|date:"m/d/y" }} 
+                {% else %}
+                    <a href='#' data-url='{% url "request_return" kit.kit_number %}' class='return-request'>Request Return</a>
+                {% endif %}
+            {% endif %}
+            </td>
+            <!--   Status    -->
+            <td class='col-sm-1'> 
+                {% if kit.shipping.status == 'At Store' and kit.status != 'Lost' %}
+                {{ kit.shipping.status }} 
+                <button data-url='{% url "return_shipment" kit.shipping.pk %}' class='btn btn-success btn-xs received-kit' data-toggle="tooltip" title="Mark kit as received."><i class="glyphicon glyphicon-ok-sign"></i></button> 
+                <button data-url='{% url "lost_shipment" kit.kit_number %}' class='btn btn-danger btn-xs lost-kit' data-toggle="tooltip" title="Lost."><i class="glyphicon glyphicon-remove-sign"></i></button> 
+                {% endif %}
+                {% if kit.status == 'Lost' %}
+                Lost
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr class='cdk_line'>
+            <td class='col-sm-12'> No Kits </td>
+        </tr>
+    </tbody>
 {% endif %}
 </table>
+<script>
+    $(document).ready(function(){
+        {% if user.profile.wan %}
+        $('[data-toggle="tooltip"]').tooltip();
+        $('#create_kit_btn').remove();
+        $('#data-info .modal-footer').prepend('<button id="create_kit_btn" class="btn btn-primary" data-url="{% url "create_kit" %}">Add New</button>');
+        $('#create_kit_btn').click(function() {
+            var url = $(this).data('url');
+            $.ajax({
+                url: url,
+                success: function(data){
+                    $('#edit-issue-modal').html(data);
+                    $('#edit-issue-modal').modal('show');
+                    $('#data-info button[data-toggle="tooltip"]').tooltip();
+                }
+            })
+        });
+        $('.received-kit').click(function() {
+            var url = $(this).data('url');
+            cdk_confirm("Mark this kit as returned?", url);
+        });
+        $('.add-tracking').click(function(){
+            var url = $(this).data('url');
+            var header = $(this).data('header');
+            bootbox.prompt({ 
+              size: "small",
+              title: "Add tracking number for shipment to " + header, 
+              callback: function(result){ 
+                    if (result){
+                        $.ajax({
+                            url: url,
+                            method: 'POST', 
+                            data: {'tracking_number': result},
+                            success:function(data){
+                                if (data.status == 'worked'){
+                                    get_all_kits()
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        })
+        $('.lost-kit').click(function() {
+            var url = $(this).data('url');
+            cdk_confirm("Mark this kit as lost?", url);
+        });
+        $('.ship-link').click(function() {
+           var url = $(this).data('url');
+           $.ajax({
+                url: url,
+                success: function(data){
+                    $('#edit-issue-modal').html(data);
+                    $('#edit-issue-modal').modal('show'); 
+                    $('#data-info button[data-toggle="tooltip"]').tooltip();
+                }
+            })
+        });
+        $('.return-request').click(function(){
+            var url = $(this).data('url');
+            cdk_confirm("This will email the store and update the ticket. Are you sure?", url);
+        })
+        {% endif %}
+        $('.search-link').click(function(){
+        	var url = $(this).data('url');
+        	var store= $(this).data('store');
+            $('#store-search').val(store);
+        	$('#store-info-modal').modal('show');
+        });
+        $('.kit-detail').click(function(){
+            var url = $(this).data('url');
+            console.log(url);
+            $.ajax({
+                url: url,
+                success: function(data){
+                    $('#data-info .modal-body').html(data);
+                    $('#data-info .modal-title').html(header);
+                }
+            })
+        });
+    })
+    function cdk_confirm(message, url){
+        bootbox.confirm({
+            message: message,
+            buttons: {
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                },
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                
+            },
+            callback: function (result) {
+                if (result){
+                    console.log(url)
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: {'empty':'empty'},
+                        success: function(data){
+                            if (data.status !='worked'){
+                                console.log(data)
+                            }
+                            else{
+                                get_all_kits()
+                            }
+                        }
+                    });         
+                }
+            }
+        });
+    }
+</script>

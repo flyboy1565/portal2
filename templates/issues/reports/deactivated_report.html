@@ -1,0 +1,24 @@
+<table class='table table-responsive table-bordered table-hover table-fixed'>
+    <thead>
+        <tr>
+            <th class='col-sm-5'>Store#</<th>
+            <th class='col-sm-5'>Status</<th>
+            <th class='col-sm-2'></th>
+        </tr>
+    </thead>
+    {% for store in stores %}
+    <tr class='cdk_line'>
+        <td class='col-sm-5 text-center'>
+            <a href='#' class='search-link' data-store='{{ store.store_number }}' data-url='{% url "store_search" store.store_number %}'>{{ store.store_number }}</a>
+        </td>
+        <td class='col-sm-5'>{{ store.store_status }}</td>
+        <td class='col-sm-2'>
+            {% if store.store_status != 'Open' %}
+            <button type="button" id='deactivate' data-toggle="tooltip" data-placement="top" title="This store was remove from being shown on the map. Please click to allow it to show on the map again." class="btn btn-success" data-url='{% url "deactivate" store.store_number %}' data-dismiss="modal">Re-Activate Store</button>
+          {% else %}
+            <button type="button" id='deactivate' data-toggle="tooltip" data-placement="top" title="This will prevent store from being shown on the map." class="btn btn-danger" data-url='{% url "deactivate" store.store_number %}' data-dismiss="modal">Deactivate Store</button>
+          {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

@@ -1,0 +1,32 @@
+<table class='table table-responsive table-bordered table-hover table-fixed'>
+    <thead>
+        <tr>
+            <th class='col-sm-1'>Store#</<th>
+            <th class='col-sm-2'>Issue</<th>
+            <th class='col-sm-2'>Ticket#</<th>
+            <th class='col-sm-2'>Down At</<th>
+            <th class='col-sm-2'>Resolved At</<th>
+            <th class='col-sm-2'>Total Down Time</th>
+            <th class='col-sm-1'>Still Down</<th>
+        </tr>
+    </thead>
+{% if issues %}
+    {% for issue in issues %}
+    <tr class='issue-{{ issue.pk }}'>
+        <td class='col-sm-1 text-center'>
+            <a href='#' class='search-link' data-store='{{ issue.store.store_number }}' data-url='{% url "store_search" issue.store.store_number %}'>{{ issue.store.store_number }}</a>
+        </td>
+        <td class='col-sm-2'>{{ issue.get_issue_display }}</td>
+        <td class='col-sm-2'>{{ issue.ticket }}</td>
+        <td class='col-sm-2'> {{ issue.down_since|date:'H:i m/d' }} </td>
+        <td class='col-sm-2'> {{ issue.resolved_time|date:'H:i m/d' }} </td>
+        <td class='col-sm-2'> {{ issue.total_time_down }}</td>
+        <td class='col-sm-1'> {% if issue.is_active == 'Resolved' %} Yes {% else %} No {% endif %}  </td>
+    </tr>
+    {% endfor %}
+{% else %}
+    <tr class='cdk_line'>
+        <td class='col-sm-12'> No Kits        </td>
+    </tr>
+{% endif %}
+</table>

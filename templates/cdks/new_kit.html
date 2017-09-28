@@ -1,0 +1,63 @@
+<div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title text-center"> Create New CDK Kit</h4>
+          </div>
+          <div class="modal-body text-center">
+              {% csrf_token %}
+              <div class='new-kit-form list-group'>
+               {{ form.as_ul }}
+               </div>
+          </div> 
+          <div class="modal-footer">
+            <button class='btn btn-primary' data-url='{% url "create_kit" %}' id='new-kit-submit'>Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+  </div>
+<script>
+  $(document).ready(function(){
+    $('#edit-issue-modal .modal-body').height('455px');
+    $(".new-kit-form li").each(function(){
+      // $(this).addClass("list-group-item")
+      $(this).find('label').addClass("pull-left")
+      $(this).find('input').addClass("pull-right form-control")
+      $(this).find('select').addClass("pull-right form-control")
+    })
+    $('#new-kit-submit').click(function(){
+      var url = $(this).data('url');
+      var kit_number = $('#id_kit_number').val();
+      var carrier = $('#id_carrier').val();
+      console.log('CARRIER: ' + carrier);
+      var modem_serial_number = $('#id_modem_serial_number').val();
+      var modem_ip = $('#id_modem_ip').val();
+      var cisco_serial_number = $("#id_cisco_serial_number").val();
+      var imei = $('#id_imei').val();
+      var tunnel_200 = $('#id_tunnel_200').val();
+      var tunnel_500 = $('#id_tunnel_500').val();
+      $.ajax({
+        url: url,
+        method: 'POST',
+        data: {'id_kit_number': kit_number, 'id_carrier': carrier,
+                'id_modem_serial_number': modem_serial_number,
+                'id_modem_ip': modem_ip, 'id_cisco_serial_number': cisco_serial_number,
+                'id_imei': imei, 'id_tunnel_200': tunnel_200, 'id_tunnel_500': tunnel_500
+              },
+        success: function(data){
+          $('#edit-issue-modal').modal('hide');
+          $.ajax({  
+              url: '{% url "kits" %}',  
+              success: function(data) {  
+                  $('#data-info .modal-body').html(data);
+                  $('#data-info .modal-title').html(header);
+                  $('#create_kit_btn').remove()
+              }  
+          });
+        }
+      })
+    })
+  })
+</script>
