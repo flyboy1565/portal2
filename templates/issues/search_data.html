@@ -132,8 +132,8 @@
                         <div class="panel-body">
                             <ul class="list-group">
                                 <ul class="list-group">
-                                    <li class="list-group-item clearfix"><div class="pull-left">Vendor</div><div class="pull-right">Windstream</div></li>
-                                    <li class="list-group-item clearfix"><div class="pull-left">Comm Type</div><div class="pull-right"> Dynamic T1</div></li>
+                                    <li class="list-group-item clearfix"><div class="pull-left">Vendor</div><div class="pull-right">{{ circuit.primary_vendor.vendor_name }}</div></li>
+                                    <li class="list-group-item clearfix"><div class="pull-left">Comm Type</div><div class="pull-right"> {{ circuit.communications_type.comm_type }}</div></li>
                                     <li class="list-group-item clearfix"><div class="pull-left">Confluence Troubleshooting</div><div class="pull-right"><a href="https://confluence.oreillyauto.com/confluenceweb/display/ISHelpSupport/CHS+-+Dynamic+T1+Troubleshooting" target="_blank">Link</a></div></li>
                                     <li class="list-group-item clearfix"><div class="pull-left">Last Checked</div><div class="pull-right"> 2017-04-25 23:47:01 </div></li>
                                 </ul>
@@ -212,6 +212,13 @@
             </div>
           </div> 
           <div class="modal-footer">
+            {% if user.profile.shsg %} 
+              {% if store.store_status != 'Open' %}
+              <button type="button" id='deactivate' data-toggle="tooltip" data-placement="top" title="This store was remove from being shown on the map. Please click to allow it to show on the map again." class="btn btn-success" data-url='{% url "deactivate" store.store_number %}' data-dismiss="modal">Re-Activate Store</button>
+              {% else %}
+              <button type="button" id='deactivate' data-toggle="tooltip" data-placement="top" title="This will prevent store from being shown on the map." class="btn btn-danger" data-url='{% url "deactivate" store.store_number %}' data-dismiss="modal">Deactivate Store</button>
+              {% endif %}
+            {% endif %}
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -231,5 +238,15 @@
                 $this.find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
             }
         });
+        $('[data-toggle=tooltip]').tooltip()
+        $('#deactivate').click(function(){
+          var url = $(this).data('url');
+          $.ajax({
+            url: url,
+            success: function(data){
+              console.log(data)
+            }
+          })
+        })
     })
 </script>

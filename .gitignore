@@ -102,6 +102,7 @@ ENV/
 .c9/metadata
 .c9/nakignore
 .c9/project.settings
+*.~c9_invoke_*py
 *.private.py
 
 #Databases

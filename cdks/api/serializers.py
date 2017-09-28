@@ -33,7 +33,6 @@ class KitListSerializer(ModelSerializer):
         fields = '__all__'
         
     def get_store(self, obj):
-        print(obj.shipping)
         if obj.shipping:
             store = Store.objects.filter(store_number=str(obj.shipping.at_store))
             serializer = StoreSerializer(instance=store, many=True)

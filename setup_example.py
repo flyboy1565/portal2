@@ -9,7 +9,7 @@ django.setup()
 from django.contrib.auth.models import User
 
 # your imports, e.g. Django models
-from locations.models import Store, District, Region, Division, DMA, DistrbutionCenter
+from locations.models import Store, District, Region, Division, DMA, DistributionCenter
 from circuits.models import Circuit, CommunicationsType
 from vendors.models import Vendor
 from issues.models import CommunicationsIssue, WorkOn
@@ -26,9 +26,11 @@ def add_locations():
     dma.save()
     
     print('Creating DC')
-    dc = DistrbutionCenter()
+    dc = DistributionCenter()
     dc.dc_number = 25
     dc.dc_status = 'Open'
+    dc.longitude = 120.156456
+    dc.latitude = 40.12354687
     dc.save()
     
     print('Creating Division')

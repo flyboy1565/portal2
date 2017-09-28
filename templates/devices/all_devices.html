@@ -1,24 +1,22 @@
-<div id='device_data' class='container'>
-    <div class='row'>
-        <div class='col-sm-2'>
-            
-            <ul class='list-group'>
-                {% for device in devices %}
-                <li class='list-group-item'>
-                    <a href='#'>
-                    {% if device.dc %} 
-                        {{ device.dc.dc_number }} 
-                    {% else %} 
-                        {{ device.router_at_store.store_number }}
-                    {% endif %}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class='col-sm-10'>
-            <div class='device_ips'></div>
-        </div>
+<div id='device_data' class='data-container'>
+    <div class='col-sm-2'>
+        <h5 class='text-center'>DC/Routers</h5>
+        <ul class='list-group'>
+            {% for device in devices %}
+            <li class='list-group-item'>
+                <a href='#'>
+                {% if device.dc %} 
+                    {{ device.dc.dc_number }} 
+                {% else %} 
+                    {{ device.router_at_store.store_number }}
+                {% endif %}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class='col-sm-10'>
+        <div class='device_ips'></div>
     </div>
 </div>
 <script>

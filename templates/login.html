@@ -1,12 +1,13 @@
 {% extends 'index.html' %}
 
-{% block title %}Login{% endblock %}
 
-{% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+{% block login_form %}
+  <div class='col-sm-4 col-sm-offset-4'>
+    <h2>Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
+  </div>
 {% endblock %}

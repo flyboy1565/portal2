@@ -4,11 +4,21 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
-from locations.models import Store
+from locations.models import Store, DistributionCenter
 from circuits.models import Circuit
 from phones.models import PhoneLine
 
 from .choices import issues_choices
+
+
+def system_choices():
+    systems = [('All Stores', 'All Stores'), ('All DCs', 'All DCs')]
+    for store in Store.objects.all():
+        systems.append((str(store.store_number), str(store.store_number)))
+    for dc in DistributionCenter.objects.all():
+        systems.append((str(dc.dc_number), str(dc.dc_number)))
+    print(systems)
+    return systems
 
 
 class CommunicationsIssue(models.Model):
@@ -30,8 +40,17 @@ class CommunicationsIssue(models.Model):
         
     def total_time_down(self):
         if self.resolved is False:
-            return (timezone.now() - self.down_since).total_seconds()
-        return (self.resolved_time - self.down_since).total_seconds()
+            total = (self.down_since - timezone.now()).total_seconds()
+        else:
+            total = (self.down_since - self.resolved_time).total_seconds()
+        return self.humanize_time(total)
+        
+    def humanize_time(self, secs):
+        mins, secs = divmod(secs, 60)
+        hours, mins = divmod(mins, 60)
+        if hours > 0:
+            return '%02d minutes %02d seconds' % (mins, secs)
+        return '%02d hours %02d minutes' % (hours, mins)
         
     @property
     def icon(self):
@@ -62,6 +81,17 @@ class CommunicationsIssue(models.Model):
     def phone(self):
         return PhoneLine.objects.filter(store__store_number=self.store.store_number,phone_type='S').first()
         
+
+class AdditionalIssue(models.Model):
+    description = models.CharField(max_length=100)
+    status = models.CharField(max_length=50, choices=(('Monitoring', 'Monitoring'), ('Active', 'Active')))
+    expires_at = models.DateTimeField(blank=True, null=False)
+    date_added = models.DateTimeField(auto_now=True)
+    added_by = models.ForeignKey(User)
+    effected_systems = models.CharField(max_length=50, choices=system_choices())
+    ticket_number = models.CharField(max_length=50)
+    closed = models.BooleanField(default=False)
+    
         
 class WorkOn(models.Model):
     issue_id = models.ForeignKey('CommunicationsIssue')

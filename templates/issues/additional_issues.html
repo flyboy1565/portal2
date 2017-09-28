@@ -8,21 +8,48 @@
           <th class="full-mode">Added By</th>
           <th>Effected Systems</th>
           <th class="full-mode">Ticket</th>
-          <th><button class="btn btn-primary">Add New</button></th>
+          <th><button id='new_additional_issue_btn' data-url='{% url "new_additional_issue" %}' class="btn btn-primary">Add New</button></th>
         </tr>
     </thead>
     <tbody>
         {% for issue in issues %}
         <tr>
-          <th>{{ issue.description }}</th>
-          <th>{{ issue.get_status_display }}</th>
-          <th class="full-mode">{{ issue.expires_at }}</th>
-          <th class="full-mode">{{ issue.date_added }}</th>
-          <th class="full-mode">{{ issue.added_by }}</th>
-          <th>{{ issue.effected_systems }}</th>
-          <th class="full-mode">{{ issue.ticket_number }}</th>
-          <th><button class="btn btn-primary">Work On</button><button class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></button></th>
+          <td>{{ issue.description }}</td>
+          <td>{{ issue.get_status_display }}</td>
+          <td class="full-mode">{{ issue.expires_at }}</td>
+          <td class="full-mode">{{ issue.date_added }}</td>
+          <td class="full-mode">{{ issue.added_by }}</td>
+          <td>{{ issue.effected_systems }}</td>
+          <td class="full-mode">{{ issue.ticket_number }}</td>
+          <td><button class="btn btn-danger close-additional" data-url='{% url "close_additional" issue.pk %}'><i class="glyphicon glyphicon-remove"></i></button></td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+<script>
+    $(document).ready(function(){
+        $('#new_additional_issue_btn').click(function(){
+            var url = $(this).data('url');
+            $.ajax({
+                url:url, 
+                success:function(data){
+                    $('#edit-issue-modal').html(data);
+                    $('#edit-issue-modal .modal-header').html('Add New Additional Issue');
+                    $('#edit-issue-modal').modal('show');
+                    $('#data-info button[data-toggle="tooltip"]').tooltip();
+                }
+            });
+        });
+        $('.close-additional').click(function(){
+            var url = $(this).data('url');
+            $.ajax({
+                url:url,
+                success: function(data){
+                    if (data.status == 'worked'){
+                        $('a[href="#additional_issues"]').trigger('click');
+                    }
+                }
+            })
+        })
+    });
+</script>

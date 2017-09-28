@@ -5,10 +5,12 @@ from .models import System, SystemIP, DownHistory
 
 
 def get_all(request):
-    System = Kit.objects.all()
-    print(kits)
-    return render(request, 'cdks/all_kits.html', {'kits':kits})
+    devices = System.objects.all()
+    return render(request, 'devices/all_devices.html', {'devices':devices})
     
 def get_one(request, id):
-    kit = System.objects.get(pk=id)
-    return render(request, 'cdks/all_kits.html', {'kits':kit})
+    system = System.objects.get(dc__dc_number=id)
+    if not system:
+        system = System.objects.get(router_at_store__store_number=id)
+    ips = SystemIP.objects.filter(system=system)
+    return render(request, 'devices/device.html', {'ips':ips})

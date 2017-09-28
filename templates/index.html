@@ -5,72 +5,18 @@
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">Issues Map</a>
+                <div class="navbar-form navbar-left col-xs-4">
+                    <input type="text" placeholder="Store/DC Search" id='store-search' > 
+                </div>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>                        
                 </button>
-                <div class="navbar-form navbar-left col-xs-4">
-                    <input type="text" placeholder="Store/DC Search" id='store-search' > 
-                </div>
             </div>
-            <ul class="nav navbar-nav navbar-right">
-               {% if not user.is_authenticated %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                        <b id="login-title">Login</b> <span class="caret"></span>
-                    </a>
-                    <ul id="login-dp" class="dropdown-menu">
-                        <li>
-                            <div class="text-center">TeamNet Credentials</div>
-                            <div class="col-md-12">
-                                <form method="POST" action="/login/">
-                                  {% csrf_token %}
-                                <div class="form-group">
-                                    <label class="sr-only" for="user">Teamnet User ID</label>
-                                    <input class="form-control" id="user" placeholder="User ID">
-                                </div>
-                                <div class="form-group">
-                                    <label class="sr-only" for="pword">Teamnet Password</label>
-                                    <input type="password" class="form-control" id="pword" placeholder="Password">
-                                </div>
-                                <div class="form-group">
-                                    <button type='submit' class="btn btn-primary btn-block">Sign in</button>
-                                </div>
-                                </form>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                {% else %}
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                        <b id="login-title">{{user.username}}</b> <span class="caret"></span>
-                    </a>
-                    <ul id="login-dp" class="dropdown-menu">
-                        {% if user.profile.shsg %}
-                        <ul class='list-group'>
-                          <li class='list-group-item text-center'>
-                              <a href='/admin/'>Admin</a>
-                          </li>
-                        </ul>
-                        {% endif %}
-                        <li>
-                            <div class="col-md-12">
-                              <form method='POST' action="/logout/">
-                                <div class="form-group">
-                                    {% csrf_token %}
-                                    <button type='submit' class="btn btn-primary btn-block" >Logout</button>
-                                </div>
-                              </form> 
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                {% endif %}
-            </ul>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav nav-pills">
+                    <hr class='newline hidden-lg'>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown"> Issue Map <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -86,7 +32,7 @@
                               <div class='multi-item-holder row'>
                                 <input type='checkbox' id='cdk_chbox' class='pull-left'>
                                 <a data-map-type="cdk" class='other-maps' href="#map">CDK Sites</a>
-                                <button class='btn btn-xs pull-right' data-url='{% url "kits" %}' data-type='cdk' data-toggle="modal" data-target='#data-info'>
+                                <button class='btn btn-xs pull-right' data-url='{% url "kits" %}' data-type='cdk' data-keyboard="true" data-toggle="modal" data-target='#data-info'>
                                   <i class='glyphicon glyphicon-list-alt'></i>
                                 </button>
                               </div>
@@ -95,7 +41,7 @@
                               <div class='multi-item-holder row'>
                                 <input type='checkbox' id='dcs_chbox' class='pull-left'>
                                 <a data-map-type="dc/routers" class='other-maps' href="#map">DC/Routers</a>
-                                <button class='btn btn-xs pull-right' data-url='{% url "devices" %}' data-type='dc/routers' data-toggle="modal" data-target='#data-info'>
+                                <button class='btn btn-xs pull-right' data-url='{% url "devices" %}' data-type='dc/routers' data-keyboard="true" data-toggle="modal" data-target='#data-info'>
                                   <i class='glyphicon glyphicon-list-alt'></i>
                                 </button>
                               </div>
@@ -104,7 +50,7 @@
                               <div class='multi-item-holder row'>
                                 <input type='checkbox' id='newstore_chbox' class='pull-left'>
                                 <a data-map-type="new" class='other-maps' href="#map">New Stores</a>
-                                <button class='btn btn-xs pull-right' data-url='{% url "new_stores" %}' data-type='new' data-toggle="modal" data-target='#data-info'>
+                                <button class='btn btn-xs pull-right' data-url='{% url "new_stores" %}' data-type='new' data-keyboard="true" data-toggle="modal" data-target='#data-info'>
                                   <i class='glyphicon glyphicon-list-alt'></i>
                                 </button>
                               </div>
@@ -136,9 +82,64 @@
                             <li data-provider='xmit'><a href="#"> Xmit Audit <span class='badge pull-right'>0</span></a></li>
                         </ul>
                     </li>
-                    <li><a data-toggle='pill' href='#additional_issues'>Additional Issues</a></li>
+                    <li><a data-toggle='pill' href='#additional_issues' data-url='{% url "additional_issues" %}'>Additional Issues</a></li>
                     <li><a data-toggle="pill" href="#reports"> Reports </a></li>
                     <li><a target='_blank' href="http://supporter/">The Supporter</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right login-holder">
+                  {% if not user.is_authenticated %}
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                          <b id="login-title">Login</b> <span class="caret"></span>
+                      </a>
+                      <ul id="login-dp" class="dropdown-menu">
+                          <li>
+                              <div class="text-center">TeamNet Credentials</div>
+                              <div class="col-md-12">
+                                  <form method="POST" action="/login/">
+                                    {% csrf_token %}
+                                  <div class="form-group">
+                                      <label class="sr-only" for="user">Teamnet User ID</label>
+                                      <input class="form-control" id="user" placeholder="User ID">
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="sr-only" for="pword">Teamnet Password</label>
+                                      <input type="password" class="form-control" id="pword" placeholder="Password">
+                                  </div>
+                                  <div class="form-group">
+                                      <button type='submit' class="btn btn-primary btn-block">Sign in</button>
+                                  </div>
+                                  </form>
+                              </div>
+                          </li>
+                      </ul>
+                  </li>
+                  {% else %}
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                          <b id="login-title">{{user.username}}</b> <span class="caret"></span>
+                      </a>
+                      <ul id="login-dp" class="dropdown-menu">
+                          {% if user.profile.shsg %}
+                          <ul class='list-group'>
+                            <li class='list-group-item text-center'>
+                                <a href='/admin/'>Admin</a>
+                            </li>
+                          </ul>
+                          {% endif %}
+                          <li>
+                              <div class="col-md-12">
+                                <form method='POST' action="/logout/">
+                                  <div class="form-group">
+                                      {% csrf_token %}
+                                      <button type='submit' class="btn btn-primary btn-block" >Logout</button>
+                                  </div>
+                                </form> 
+                              </div>
+                          </li>
+                      </ul>
+                  </li>
+                  {% endif %}
                 </ul>
             </div>
         </div>
@@ -279,57 +280,38 @@
       </div>
       <div id='additional_issues' class='tab-pane fade in'>
         <div id='additional_issues_container'>
-          <table class='table table-bordered'>
-            <thead>
-            <tr>
-              <th>Issue</th>
-              <th>Status</th>
-              <th class='full-mode'>Time Till Expiration</th>
-              <th class='full-mode'>Added On</th>
-              <th class='full-mode'>Added By</th>
-              <th>Effected Systems</th>
-              <th class='full-mode'>Ticket</th>
-              <th><button class='btn btn-primary'>Add New</button></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <th>DC Maintenance</th>
-              <th>Monitoring</th>
-              <th class='full-mode'>5 hours</th>
-              <th class='full-mode'>11:34 12/2</th>
-              <th class='full-mode'>JHOLSTINE</th>
-              <th>DC 5, 25</th>
-              <th class='full-mode'>234444, 233455</th>
-              <th><button class='btn btn-primary'>Work On</button><button class='btn btn-danger'><i class='glyphicon glyphicon-remove'></i></button></th>
-            </tr>
-            <tr>
-              <th>Banking System Down</th>
-              <th>Active</th>
-              <th class='full-mode'>1 day</th>
-              <th class='full-mode'>11:34 12/5</th>
-              <th class='full-mode'>JHOLSTINE</th>
-              <th>All Stores</th>
-              <th class='full-mode'>55555555</th>
-              <th><button class='btn btn-primary'>Work On</button><button class='btn btn-danger'><i class='glyphicon glyphicon-remove'></i></button></th>
-            </tr>
-            </tbody>
-          </table>
         </div>
       </div>
-      <div id='reports' class="tab-pane fade in"></div>
+      <div id='reports' class="tab-pane fade in">
+        <div class='col-sm-2'>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Reports</h3>
+            </div>
+            <ul class="list-group">
+              <li class='list-group-item'>
+                <a href="#" class='report' data-title='Deactivated Stores' data-url="{% url 'deactivated_report' %}">Deactivated Stores</a>
+              </li>
+              <li class='list-group-item'>
+                <a href="#" class='report' data-title='Previous Day Issues' data-url="{% url 'previous_day' %}">Previous Day Issues</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div id='report-content' class='col-sm-10'>
+          
+        </div>
+      </div>
     </div>
-    <div id="store-info-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
-    <div id="edit-issue-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
     <div id="data-info" class="modal fade" role="dialog">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
+            <h4 class="modal-title"></h4>
           </div>
           <div class="modal-body">
-            <p>Some text in the modal.</p>
+            <p></p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -337,5 +319,7 @@
         </div>
       </div>
     </div>
+    <div id="store-info-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
+    <div id="edit-issue-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
 </div>
 {% endblock %}

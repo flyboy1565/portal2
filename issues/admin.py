@@ -7,3 +7,4 @@ from .models import *
 
 admin.site.register(CommunicationsIssue)
 admin.site.register(WorkOn)
+admin.site.register(AdditionalIssue)

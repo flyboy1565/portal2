@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^api/phones/', include('phones.api.urls')),
     url(r'^api/issues/', include('issues.api.urls')),
     url(r'^api/kits/', include('cdks.api.urls')),
+    url(r'^api/devices/', include('devices.api.urls')),
     # html 
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
@@ -45,4 +46,4 @@ urlpatterns = [
 
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += staticfiles_urlpatterns()

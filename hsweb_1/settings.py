@@ -98,9 +98,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -120,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -136,6 +134,9 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = '/'
 
+# session time      sec   min  hours 
+SESSION_COOKIE_AGE = 60 * 60 * 12
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
@@ -146,14 +147,6 @@ STATICFILES_DIRS = (
 )
 
 # http://www.django-rest-framework.org/api-guide/permissions/
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.TokenAuthentication',
-#     )
-# }
 
 # https://realpython.com/blog/python/getting-started-with-django-channels/
 CHANNEL_LAYERS = {
@@ -165,3 +158,8 @@ CHANNEL_LAYERS = {
         'ROUTING': 'hsweb_1.routing.channel_routing',
     }
 }
+
+
+
+# Links
+# http://bootboxjs.com/   bootstrap box - makes modals quickly

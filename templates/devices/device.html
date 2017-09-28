@@ -8,6 +8,7 @@
         </tr>
     </thead>
     <tbody>
+        {% if ip %}
         {% for ip in ips %}
         <tr>
             <td class='col-sm-3'>{{ ip.device_type }}</<td>
@@ -16,5 +17,10 @@
             <td class='col-sm-3'>{{ ip.device_location }}</td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td class='col-sm-12 text-center'>No IPs</<td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>

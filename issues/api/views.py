@@ -13,15 +13,13 @@ class IssueDetailAPIView(RetrieveAPIView):
 
 
 class IssueListAPIView(ListAPIView):
-    queryset = CommunicationsIssue.objects.filter(resolved=False)
+    queryset = CommunicationsIssue.objects.filter(resolved=False, store__store_status='Open')
     serializer_class = IssueListSerializer
     
 
 def UpdateIssueWithWorkOn(request, id):
     user = User.objects.get(username=request.user)
     issue = CommunicationsIssue.objects.get(pk=id)
-    print(user)
-    print(issue)
     work_on = WorkOn()
     work_on.issue_id = issue
     work_on.work_on_by = user
@@ -31,9 +29,9 @@ def UpdateIssueWithWorkOn(request, id):
 
 def WorkOnCompleted(request, id):
     issue = CommunicationsIssue.objects.get(pk=id)
-    work_on = WorkOn.objects.filter(issue_id=issue).last()
-    work_on.completed = True
-    work_on.save()
+    work_ons = WorkOn.objects.filter(issue_id=issue, completed=False)
+    for workon in work_ons:
+        workon.completed = True
+        workon.save()
     return JsonResponse(IssueSerializer(issue).data)
-    
     
