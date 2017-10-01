@@ -1,6 +1,6 @@
-from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField, SerializerMethodField, PrimaryKeyRelatedField
+from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField, SerializerMethodField, PrimaryKeyRelatedField, ReadOnlyField
 
-from locations.models import  Store, District, Region, Division, DistrbutionCenter, DMA
+from locations.models import  Store, District, Region, Division, DistributionCenter, DMA
 
 
 class StoreListSerializer(ModelSerializer):
@@ -9,6 +9,7 @@ class StoreListSerializer(ModelSerializer):
     class Meta:
         model = Store
         fields = ('store_number', 'url')
+  
         
 class StoreDetailSerializer(ModelSerializer):
     district_url = HyperlinkedIdentityField(
@@ -20,13 +21,15 @@ class StoreDetailSerializer(ModelSerializer):
     class Meta:
         model = Store
         fields = '__all__'
-        
+
+
 class DistrictListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(view_name='district-detail', lookup_field='district_number')
     
     class Meta:
         model = District
         fields = '__all__'
+  
         
 class DistrictDetailSerializer(ModelSerializer):
     stores = SerializerMethodField()
@@ -78,3 +81,13 @@ class DivisionDetailSerializer(ModelSerializer):
     def get_regions(self, obj):
         queryset = Region.objects.filter(division=obj.division_number)
         return DistrictListSerializer(queryset, many=True, context=self.context).data  
+        
+        
+class NewStoreListSerializer(ModelSerializer):
+    weeks_to_open = ReadOnlyField()
+    
+    class Meta:
+        model = Store
+        fields = '__all__'
+        
+    

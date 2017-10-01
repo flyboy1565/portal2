@@ -1,0 +1,70 @@
+<tr data-store="{{ issue.store.store_number }}"> 
+    <td class="text-center" data-sort-value="{{ issue.store.store_number }}">
+        <a href="#" data-toggle="modal" data-store="{{ issue.store.store_number }}" data-target="#store-info-modal">{{ issue.store.store_number }}</a>
+    </td>
+    <td class="full-mode text-center" data-sort-value="{{ issue.store.state }}">{{ issue.store.state }}</td>
+    <td class="full-mode text-center" data-sort-value="{{ issue.circuits.vendor_name }}">{{ issue.circuits.vendor_name }}</td>
+    <td class="full-mode text-center">
+        <a taget="_blank" href="https://support-app.oreillyauto.com/MRcgi/MRlogin.pl?DL={{ issue.ticket}}DA13">{{ issue.ticket }}</a>
+    </td>
+    <td class="full-mode text-center" data-sort-value="{{ issue.issue }}">
+        <i class="glyphicon fa fa-question pull-left"></i>{{ issue.issue }}
+    </td>
+    <td class="full-mode text-center" data-sort-value="{{ issue.last_checked | date:'u'}}">{{ issue.last_checked | date:"H:i m/d/y" }}</td>
+    <td class="full-mode text-center" data-sort-value="{{ issue.down_since | date:'u'}}">{{ issue.down_since | date:"H:i m/d/y" }}</td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".1 AS400">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".3 Cisco Low">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".4 VQ Edge">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".5 T1">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".10 System Console">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center full-mode">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".14 SPX Tester">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".129 Cisco High">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".240 MMR/ILO/IMM">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".250 ESXI">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title=".254 Linux VM">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+    <td class="text-center">
+        <span class="label label-danger" data-toggle="tooltip" title="" data-original-title="SNA">
+            <i class="glyphicon glyphicon-arrow-down"></i>
+        </span>
+    </td>
+</tr>

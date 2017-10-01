@@ -1,0 +1,128 @@
+<div class='data-container'>
+    <div><a href='#' data-url='{% url "kits" %}' id='get_kits'>Back to Full List</a></div>
+    <div class='data-container'>
+        <div class='col-sm-4'>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Kit Number:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' class='form-control' value='{{kit.kit_number}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Carrier:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' class='form-control' value='{{kit.carrier}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Modem IP:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' class='form-control ip-input' value='{{kit.modem_ip}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Modem Serial #:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' maxlength=50 class='form-control' value='{{kit.modem_serial_number}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Cisco Serial #:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' maxlength=50 class='form-control' value='{{kit.cisco_serial_number}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    IMEI #:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' maxlength=50 class='form-control' value='{{kit.imei}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Tunnel 200:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' maxlength=50 class='form-control ip-input' value='{{kit.tunnel_200}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Tunnel 500:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' maxlength=50 class='form-control ip-input' value='{{kit.tunnel_500}}'>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-5'>
+                    Status:
+                </div>
+                <div class='col-sm-7'>
+                    <input type='text' maxlength=50 class='form-control' value='{{kit.status}}'>
+                </div>
+            </div>
+        </div>
+        <div class='col-sm-8' id='data-table-container'>
+            <table id='data-table' class="table table-responsive table-bordered table-hover table-fixed">
+                <thead>
+                    <tr>
+                        <th class='col-sm-1'>Ticket</th>
+                        <th class='col-sm-1'>Shipped</th>
+                        <th class='col-sm-1'>Shipped To</th>
+                        <th class='col-sm-1'>Tracking To Store</th>
+                        <th class='col-sm-1'>Tracking To HS</th>
+                        <th class='col-sm-1'>Return Requested</th>
+                        <th class='col-sm-1'>Returned By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shipment in shipments %}
+                    <tr>
+                        <td class='col-sm-1'><a href='#'>{{shipment.ticket_number}}</a></td>
+                        <td class='col-sm-1'>{{shipment.shipped_date}}</td>
+                        <td class='col-sm-1'>{% if shipment.at_store %}<a href='#' class='search-link' data-store='{{ shipment.at_store }}' data-url='{% url "store_search" shipment.at_store %}'>{{ shipment.at_store }}</a>{% endif %}</td></td>
+                        <td class='col-sm-1'>{{shipment.tracking_number_to_store}}</td>
+                        <td class='col-sm-1'>{{shipment.tracking_number_to_help_support}}</td>
+                        <td class='col-sm-1'>{{ shipment.returned_on}}</td>
+                        <td class='col-sm-1'>{{ shipment.returned_accept_by.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#get_kits').click(function(){
+            var url = $('#get_kits').data('url');
+            $.ajax({  
+                url: url,  
+                success: function(data) {  
+                    $('#data-info .modal-body').html(data);
+                    $('#data-info .modal-title').html(header);
+                    $('#data-info table th').each(function(index){
+                        var w = $(this).width();
+                        $('#data-info table td').each(function(){
+                            $(this).width(w);
+                            $(this).height('30px');
+                        })
+                    });
+                }  
+            });
+        })
+    })
+</script>

@@ -1,0 +1,50 @@
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title text-center"> Create New CDK Kit</h4>
+          </div>
+          <div class="modal-body text-center">
+              {% csrf_token %}
+              <div class='new_additional_issue list-group'>
+               {{ form.as_ul }}
+               </div>
+          </div> 
+          <div class="modal-footer">
+            <button class='btn btn-primary' data-url='{% url "new_additional_issue" %}' id='additional-issues-submit'>Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+  $(document).ready(function(){
+    $('#edit-issue-modal .modal-body').height('455px');
+    $(".new_additional_issue li").each(function(){
+      // $(this).addClass("list-group-item")
+      $(this).find('label').addClass("pull-left")
+      $('#id_expires_at').addClass('datetime')
+      $(this).find('input').addClass("pull-right form-control")
+      $(this).find('select').addClass("pull-right form-control")
+    })
+    $('#additional-issues-submit').click(function(){
+      var url = $(this).data('url');
+      $.ajax({
+        url: url,
+        method: 'POST',
+        data: {'description': $('#id_description').val(),
+                'expires_at': $('#id_expires_at').val(),
+                'effected_systems': $('#id_effected_systems').val(),
+                'ticket_number': $('#id_ticket_number').val(),
+              },
+        success: function(data){
+            if(data.status == 'worked'){
+                $('#edit-issue-modal').modal('hide');
+                $('a[href="#additional_issues"]').trigger('click');
+            }
+        }
+      })
+    })
+  })
+</script>

@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='main col-lg-12'>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Issues Map</a>
+                <div class="navbar-form navbar-left col-xs-4">
+                    <input type="text" placeholder="Store/DC Search" id='store-search' > 
+                </div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>                        
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav nav-pills">
+                    <hr class='newline hidden-lg'>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"> Issue Map <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a data-map-type="all" href="#map">All Issues <span class='badge pull-right'>0</span></a></li>
+                            <li role='separator' class='divider'></li>
+                            <li><a data-map-type="as400" href="#map">AS400 Down <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="linux" href="#map">Linux Down <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="comm" href="#map">Comm Issues <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="sna" href="#map">SNA Issues <span class='badge pull-right'>0</span></a></li>
+                            <li><a data-map-type="uncategorized" href="#map">Uncategorized <span class='badge pull-right'>0</span></a></li>
+                            <li role='separator' class='divider'></li>
+                            <li>
+                              <div class='multi-item-holder row'>
+                                <input type='checkbox' id='cdk_chbox' class='pull-left'>
+                                <a data-map-type="cdk" class='other-maps' href="#map">CDK Sites</a>
+                                <button class='btn btn-xs pull-right' data-url='{% url "kits" %}' data-type='cdk' data-keyboard="true" data-toggle="modal" data-target='#data-info'>
+                                  <i class='glyphicon glyphicon-list-alt'></i>
+                                </button>
+                              </div>
+                            </li>
+                            <li>
+                              <div class='multi-item-holder row'>
+                                <input type='checkbox' id='dcs_chbox' class='pull-left'>
+                                <a data-map-type="dc/routers" class='other-maps' href="#map">DC/Routers</a>
+                                <button class='btn btn-xs pull-right' data-url='{% url "devices" %}' data-type='dc/routers' data-keyboard="true" data-toggle="modal" data-target='#data-info'>
+                                  <i class='glyphicon glyphicon-list-alt'></i>
+                                </button>
+                              </div>
+                            </li>
+                            <li>
+                              <div class='multi-item-holder row'>
+                                <input type='checkbox' id='newstore_chbox' class='pull-left'>
+                                <a data-map-type="new" class='other-maps' href="#map">New Stores</a>
+                                <button class='btn btn-xs pull-right' data-url='{% url "new_stores" %}' data-type='new' data-keyboard="true" data-toggle="modal" data-target='#data-info'>
+                                  <i class='glyphicon glyphicon-list-alt'></i>
+                                </button>
+                              </div>
+                            </li>
+                            <li role='separator' class='divider'></li>
+                            <li>
+                              <div class='text-center'>
+                                <input type='checkbox' id='#recenter'>
+                                <a data-map-type="all" href="#map">Re-Center Map</a>
+                              </div>  
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a data-toggle="pill" href="#comm-monitor">Comm. Monitor</a></li>
+                    <li class="dropdown email-counts">
+                        <a class="dropdown-toggle" data-toggle="dropdown"> Email Counts <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li data-provider='accel'><a href="#"> Accel <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='att'><a href="#"> ATT <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='cybera'><a href="#"> Cybera <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='mettel'><a href="#"> MetTel <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='windstream'><a href="#"> Windstream <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider=vonage><a href="#"> Vonage <span class='badge pull-right'>0</span></a></li>
+                            <li role='separator' class='divider'></li>
+                            <li data-provider='cog'><a href="#"> COG Support <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='comm'><a href="#"> Comm Notification <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='online'><a href="#"> Online Store <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='mplus'><a href="#"> MPlus <span class='badge pull-right'>0</span></a></li>
+                            <li data-provider='xmit'><a href="#"> Xmit Audit <span class='badge pull-right'>0</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a data-toggle='pill' href='#additional_issues' data-url='{% url "additional_issues" %}'>Additional Issues</a></li>
+                    <li><a data-toggle="pill" href="#reports"> Reports </a></li>
+                    <li><a target='_blank' href="http://supporter/">The Supporter</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right login-holder">
+                  {% include "login.html" with user=user %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id='main-tab' class="tab-content">
+      <div id="map" class="tab-pane fade in active">
+        <div id='map_container'></div>
+        <button class='list-btns btn btn-primary btn-xs' data-target='#store-issue-list' data-toggle='tooltip' data-placement="auto" title='Store Issues'>
+          <i class='glyphicon glyphicon-triangle-left'></i>
+        </button>
+        <button class='list-btns btn btn-primary btn-xs' data-target='#alert-pane' data-toggle='tooltip' data-placement="auto" title='Notifications'>
+          <i class='glyphicon glyphicon-triangle-left'></i>
+        </button>
+        <button class='list-btns btn btn-primary btn-xs' data-target='#shsg-pane' data-toggle='tooltip' data-placement="auto" title='Team Activity'>
+          <i class='glyphicon glyphicon-triangle-left'></i>
+        </button>
+        <div id='store-issue-list' class='peek-a-do col-sm-8 col-md-4 col-lg-4'>
+          <h4>Store Issues</h4>
+          <div class='store-issues-filter'>
+            <button class='btn btn-sm btn-primary' data-target='.glyphicon-signal'>
+              <i class='glyphicon glyphicon-signal'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-server'>
+              <i class='glyphicon fa fa-server'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-linux'>
+              <i class='glyphicon fa fa-linux'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-question'>
+              <i class='glyphicon fa fa-question'></i>
+            </button>
+            <button class='btn btn-sm btn-primary' data-target='.fa-exchange'>
+              <i class='glyphicon fa fa-exchange'></i>
+            </button>
+          </div>
+          <table class='table table-bordered'>
+            <thead>
+            <tr>
+              <th></th>
+              <th>Store</th>
+              <th>Down Since</th>
+              <th>Last Check</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div id='alert-pane' class='peek-a-do container col-sm-8  col-md-4 col-lg-4'>
+          <h4>Notifications</h4>
+          <div class='alert alert-danger'>
+            <div class='notification-date'><span class='pull-right'>12:45 1/12</span></div>
+            <span>DC5 is down </span>
+            <button class='btn btn-success btn-xs'>Acknowledge</button>
+          </div>
+          <div class='alert alert-info'>
+            <div class='notification-date'><span class='pull-right'>12:45 1/12</span></div>
+            <div class='notification-message'><span>Voicemail for 9999 </span></div>
+            <div class='notification-action'><button class='btn btn-success btn-xs pull-right'>Work On</button> </div>
+          </div>
+          <div class='alert alert-success'>
+            <span><strong>Update </strong>DC5 Down - JHOLSTINE is working on it.</span>
+            <button class='btn btn-success btn-xs'>Work On</button>
+          </div>
+        </div>
+        <div id='shsg-pane' class='peek-a-do container col-sm-8  col-md-4 col-lg-4'>
+          <h4>Activity</h4>
+          <div class='shsg-activity'>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-searches'>Searches</button>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-work-on'>Working On</button>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-confirmed'>Confirmed</button>
+            <button class='btn btn-sm btn-primary' data-target='.shsg-completed'>Completed</button>
+          </div>
+          <div class='list-group shsg-activity-list'>
+            <li data-order='3' id='activity_3' class='list-group-item shsg-work-on'>JHOLSTINE is working on Comm Issue for 1234</li>
+            <li data-order='2' id='activity_2' class='list-group-item shsg-work-on'>
+              <div class='activity-date'>
+                <span class='pull-right'>11:45 12/12</span>
+              </div>
+              <div>JHOLSTINE is working on Comm Issue for 1234</div>
+              <div class='activity-action'>
+                <span class='btn btn-xs btn-primary pull-right'>Reset</span>
+              </div>
+            </li>
+            <li data-order='1' id='activity_1' class='list-group-item shsg-searches'>
+              <div class='row activity-date'>11:45 12/12 </div>
+              <div class='row'>JHOLSTINE searched for 1234</div>
+            </li>
+          </div>
+        </div>
+      </div>
+      <div id='comm-monitor' class="tab-pane fade in">
+        <div id='comm-monitor_container'>
+          <div class='comm-monitor-filter col-sm-2 col-sm-offset-5 text-center'>
+            <button class="btn btn-primary" data-target=".glyphicon-signal">
+              <i class="glyphicon glyphicon-signal"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-server">
+              <i class="glyphicon fa fa-server"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-linux">
+              <i class="glyphicon fa fa-linux"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-question">
+              <i class="glyphicon fa fa-question"></i>
+            </button>
+            <button class="btn btn-primary" data-target=".fa-exchange">
+              <i class="glyphicon fa fa-exchange"></i>
+            </button>
+          </div>
+          <table class='table table-responsive table-bordered'>
+            <thead>
+            <tr>
+              <th class='text-center'>Store/DC</th>
+              <th class='full-mode text-center'>State </th>
+              <th class='full-mode text-center'>Vendor </th>
+              <th class='full-mode text-center'>Ticket </th>
+              <th class='full-mode text-center'>Issue </th>
+              <th class='full-mode text-center'>Last Check </th>
+              <th class='full-mode text-center'>Down Since </th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='AS400 Server'>.1</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='Cisco 800 Port FE0'>.3</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='VQ Edge'>.4</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='T1'>.5</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='System Console'>.10</span></th>
+              <th class='dot_status text-center full-mode'><span data-toggle="tooltip" title='SPX Tester'>.14</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='Cisco 800 Port FE1'>.129</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='ESXI'>.250</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='MMR/ILO/IMM'>.253</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='Linux VM'>.254</span></th>
+              <th class='dot_status text-center'><span data-toggle="tooltip" title='SNA'>SNA</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id='additional_issues' class='tab-pane fade in'>
+        <div id='additional_issues_container'>
+        </div>
+      </div>
+      <div id='reports' class="tab-pane fade in">
+        <div class='col-sm-2'>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Reports</h3>
+            </div>
+            <ul class="list-group">
+              <li class='list-group-item'>
+                <a href="#" class='report' data-title='Deactivated Stores' data-url="{% url 'deactivated_report' %}">Deactivated Stores</a>
+              </li>
+              <li class='list-group-item'>
+                <a href="#" class='report' data-title='Previous Day Issues' data-url="{% url 'previous_day' %}">Previous Day Issues</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div id='report-content' class='col-sm-10'>
+          
+        </div>
+      </div>
+    </div>
+    <div id="data-info" class="modal fade" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body">
+            <p></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="store-info-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
+    <div id="edit-issue-modal" class="modal fade" role="dialog" data-keyboard="true"></div>
+</div>
+{% endblock %}

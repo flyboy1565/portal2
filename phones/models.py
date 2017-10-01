@@ -7,6 +7,7 @@ from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 
 from locations.models import Store
+from vendors.models import Vendor
 from .choices import phone_types, note_types, account_types, stick_types
 
 
@@ -45,12 +46,12 @@ class PhoneType(models.Model):
         
 
 class Carrier(models.Model):
-    carrier_name = models.CharField(max_length=30)
+    carrier_name = models.ForeignKey(Vendor)
     phone_number = PhoneNumberField()
     email = models.EmailField()
     
     def __str__(self):
-        return self.carrier_name
+        return self.carrier_name.vendor_name
     
 
 class Comment(models.Model):
@@ -61,7 +62,7 @@ class Comment(models.Model):
     created_timestamp = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return "{} - {} - {}".format(self.store.store_number, self.get_note_type_display, self.created_timestamp)
+        return "{}".format(self.store.store_number)
     
 
 class BillingAccountNumber(models.Model):

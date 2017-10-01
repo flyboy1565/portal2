@@ -42,10 +42,18 @@ INSTALLED_APPS = [
     'localflavor',
     'auditlog',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
+    'channels',
     #My Apps
     'locations',
     'phones',
+    'issues',
+    'accounts',
+    'circuits',
+    'vendors',
+    'cdks',
+    'devices',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -67,7 +75,7 @@ ROOT_URLCONF = 'hsweb_1.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -90,9 +98,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -112,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -126,16 +132,34 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_REDIRECT_URL = '/'
+
+# session time      sec   min  hours 
+SESSION_COOKIE_AGE = 60 * 60 * 12
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = ( 
+      os.path.join(BASE_DIR, 'static'),  
+)
 
 # http://www.django-rest-framework.org/api-guide/permissions/
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',
-    )
+
+# https://realpython.com/blog/python/getting-started-with-django-channels/
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'asgi_redis.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('localhost', 6379)],
+        },
+        'ROUTING': 'hsweb_1.routing.channel_routing',
+    }
 }
+
+
+
+# Links
+# http://bootboxjs.com/   bootstrap box - makes modals quickly

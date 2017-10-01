@@ -1,0 +1,53 @@
+{% if not user.is_authenticated %}
+  <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+          <b id="login-title">Login</b> <span class="caret"></span>
+      </a>
+      <ul id="login-dp" class="dropdown-menu">
+          <li>
+              <div class="text-center">TeamNet Credentials</div>
+              <div class="col-md-12">
+                  <div class='form'>
+                      {% csrf_token %}
+                    <div class="form-group">
+                        <label class="sr-only" for="user">Teamnet User ID</label>
+                        <input class="form-control" id="user" placeholder="User ID">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="pword">Teamnet Password</label>
+                        <input type="password" class="form-control" id="pword" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <button onclick="login()" class="btn btn-primary btn-block">Sign in</button>
+                    </div>
+                  </div>
+              </div>
+          </li>
+      </ul>
+  </li>
+  {% else %}
+  <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+          <b id="login-title">{{user.username}}</b> <span class="caret"></span>
+      </a>
+      <ul id="login-dp" class="dropdown-menu">
+          {% if user.profile.shsg %}
+          <ul class='list-group'>
+            <li class='list-group-item text-center'>
+                <a href='/admin/'>Admin</a>
+            </li>
+          </ul>
+          {% endif %}
+          <li>
+              <div class="col-md-12">
+                <form method='POST' action='/logout/'>
+                  <div class="form-group">
+                      {% csrf_token %}
+                      <button type='submit' class="btn btn-primary btn-block" >Logout</button>
+                  </div>
+                </form> 
+              </div>
+          </li>
+      </ul>
+  </li>
+  {% endif %}

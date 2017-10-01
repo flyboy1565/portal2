@@ -1,5 +1,6 @@
 # django 
 from django.db import models
+from django.utils import timezone
 
 # third party
 from localflavor.us.models import USStateField
@@ -22,7 +23,7 @@ class Store(models.Model):
     zip_code = models.CharField(max_length=5, blank=True, null=True)
     district = models.ForeignKey('District', blank=True, null=True)
     dma = models.ForeignKey('DMA', blank=True, null=True)
-    dc = models.ForeignKey('DistrbutionCenter', blank=True, null=True)
+    dc = models.ForeignKey('DistributionCenter', blank=True, null=True)
     priority = models.BooleanField(default=False)
     hub = models.CharField(max_length=4, blank=True, null=True)
     is_hub = models.BooleanField(default=False)
@@ -42,7 +43,14 @@ class Store(models.Model):
     
     def __str__(self):
         return "{}".format(self.store_number)
-    
+        
+    @property
+    def weeks_to_open(self):
+        today = timezone.now().date()
+        t = self.open_date - today
+        print(t)
+        return int(t.days/7)
+        
 
 class District(models.Model):
     district_number = models.IntegerField(primary_key=True)
@@ -60,7 +68,7 @@ class Region(models.Model):
     manager_name = models.CharField(max_length=100, blank=True, null=True)
     connected_to_store = models.ForeignKey('Store', blank=True, null=True, related_name='region_off_store')
     division = models.ForeignKey('Division', blank=True, null=True)
-    district_status = models.CharField(max_length=20, choices=location_status())
+    region_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):
         return "{}".format(self.region_number)
@@ -76,10 +84,12 @@ class Division(models.Model):
         return "{}".format(self.division_number)
         
 
-class DistrbutionCenter(models.Model):
+class DistributionCenter(models.Model):
     dc_number = models.IntegerField(primary_key=True)
+    longitude = models.DecimalField(max_digits=11, decimal_places=8)
+    latitude = models.DecimalField(max_digits=11, decimal_places=8)
     manager_name = models.CharField(max_length=100, blank=True, null=True)
-    store_off_dc = models.ForeignKey('Store', blank=True, null=True)        
+    store_off_dc = models.ForeignKey('Store', blank=True, null=True)
     dc_status = models.CharField(max_length=20, choices=location_status())
     
     def __str__(self):
@@ -97,5 +107,5 @@ auditlog.register(Store)
 auditlog.register(District)
 auditlog.register(Region)
 auditlog.register(Division)
-auditlog.register(DistrbutionCenter)
+auditlog.register(DistributionCenter)
 auditlog.register(DMA)
