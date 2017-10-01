@@ -3,7 +3,7 @@ html, body {
     width: 100%;
 }
 .main {
-    height: 97%;
+    height: 95%;
     width: 100%;
     /*margin-left: 5%;*/
 }
@@ -338,4 +338,7 @@ a:focus, a:hover {
 }
 .modal-body .table-fixed td {
     height: 50px;
+}
+#device_data div {
+    height: 100%;
 }

@@ -18,12 +18,29 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.shortcuts import render
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.auth import views as auth_views
-
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 def index(request):
-    return render(request, 'index.html', {})
+    try:
+        user = User.objects.get(username=request.user)
+    except User.DoesNotExist:
+        user = None
+    return render(request, 'index.html', {'user': user})
+    
 
+def login(request):
+    user = None
+    print(request.user)
+    if request.POST:
+        username = request.POST.get('user')
+        pword = request.POST.get('pword')
+        user = authenticate(username=username, password=pword)
+        if user is not None:
+            auth_login(request, user)
+    return render(request, 'login.html', {'user': user})
+    
 
 urlpatterns = [
     # api 
@@ -38,7 +55,7 @@ urlpatterns = [
     url(r'^cdks/', include('cdks.urls')),
     url(r'^devices/', include('devices.urls')),
     url(r'^issues/', include('issues.urls')),
-    url(r'login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
+    url(r'login/', login, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^$', index, name='home'),
 ]

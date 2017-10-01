@@ -389,6 +389,57 @@ function get_all_kits(){
             }  
         });
     }
+function login(){
+    var user = $('#user').val()
+    var pword = $('#pword').val()
+    if (user){
+        console.log('user ' + user)
+        console.log(user.length)
+        console.log(pword.length)
+        if (user.length > 0 || pword.lengh > 0){
+            console.log('getting ready to login')
+            $.ajax({
+                url: '/login/',
+                method: 'POST',
+                data: {'user':user, 'pword': pword}, 
+                success: function(data){
+                    console.log('preformed login')
+                    $('.login-holder').html(data)
+                }
+            })
+        }
+        else{
+            console.log('Username or password is empty just get a new form')
+            $.ajax({
+                url: '/login/',
+                method: 'GET', 
+                success: function(data){
+                    $('.login-holder').html(data)
+                }
+            })
+        }
+    }
+    else{
+        $.ajax({
+            url: '/login/',
+            method: 'GET', 
+            success: function(data){
+                $('.login-holder').html(data)
+            }
+        })
+    }
+}
+function logout(){
+    $.ajax({
+        url: '/logout/',
+        method: 'POST',
+        data: {'empty':'empty'}, 
+        success: function(data){
+            console.log('preformed login')
+            $('.login-holder').html(data)
+        }
+    })
+}
 String.prototype.format = function () {
   var i = 0, args = arguments;
   return this.replace(/{}/g, function () {
@@ -567,7 +618,7 @@ $(document).ready(function(){
         loading = '<div class="col-sm-2 col-sm-offset-5"><button class="btn btn-warning"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading</button></div>';
         $('#data-info .modal-body').html(loading)
     });
-    
+    //login()
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
