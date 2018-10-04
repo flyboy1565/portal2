@@ -144,21 +144,25 @@
               </div>
               </div>
               <div id="phone_lines" class="tab-pane fade">
-                <table class='table table-bordered'>
-                  <tr>
-                    <th>Line #</th>
-                    <th>Phone #</th>
-                    <th>Tags</th>
-                    <th>Type</th>
-                  </tr>
+                <table class='table table-bordered table-fixed'>
+                  <thead>
+                    <tr>
+                      <th class='col-sm-4'>Line #</th>
+                      <th class='col-sm-4'>Phone #</th>
+                      <th class='col-sm-4'>Tags</th>
+                      <th class='col-sm-4'>Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                   {% for phone in phones %}
-                  <tr>
-                    <td>{{ phone.line_number }}</td>
-                    <td>{{ phone.phone_number }}</td>
-                    <td>{{ phone.get_tag_display }}</td>
-                    <td>{{ phone.get_phone_type_display }}</td>
-                  </tr>
+                    <tr>
+                      <td class='col-sm-4'>{{ phone.line_number }}</td>
+                      <td class='col-sm-4'>{{ phone.phone_number }}</td>
+                      <td class='col-sm-4'>{% for tag in phone.tag %} {{tag.tag }} {% endfor %}</td>
+                      <td class='col-sm-4'>{{ phone.get_phone_type_display }}</td>
+                    </tr>
                   {% endfor %}
+                  </tbody>
                 </table>
               </div>
               <div id="down_history" class="tab-pane fade">

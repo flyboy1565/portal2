@@ -13,10 +13,13 @@ from .choices import issues_choices
 
 def system_choices():
     systems = [('All Stores', 'All Stores'), ('All DCs', 'All DCs')]
-    for store in Store.objects.all():
-        systems.append((str(store.store_number), str(store.store_number)))
-    for dc in DistributionCenter.objects.all():
-        systems.append((str(dc.dc_number), str(dc.dc_number)))
+    try:
+        for store in Store.objects.all():
+            systems.append((str(store.store_number), str(store.store_number)))
+        for dc in DistributionCenter.objects.all():
+            systems.append((str(dc.dc_number), str(dc.dc_number)))
+    except:
+        pass
     print(systems)
     return systems
 

@@ -111,6 +111,10 @@ def add_circuits():
     ct.comm_type = 'Dynamic T1'
     ct.save()
     
+    ct2 = CommunicationsType()
+    ct2.comm_type = 'EVDO'
+    ct2.save()
+    
     circuit = Circuit()
     circuit.store = Store.objects.get(pk=2942)
     circuit.primary_vendor = Vendor.objects.all()[0]
@@ -155,13 +159,6 @@ def add_phones():
     carrier.email = 'test@verizon.com'
     carrier.save()
     
-    comment = Comment()
-    comment.store = Store.objects.get(store_number=2942)
-    comment.note = 'Simple Test'
-    comment.note_type = 'Site'
-    comment.user = User.objects.all()[0]
-    comment.save()
-    
     account_number = BillingAccountNumber()
     account_number.account_number = 'A12414'
     account_number.description = 'Master'
@@ -181,14 +178,25 @@ def add_phones():
     billing.stick = 'NA'
     billing.save()
     
+    comment = Comment()
+    comment.store = billing
+    comment.note = 'Simple Test'
+    comment.note_type = 'Site'
+    comment.user = User.objects.all()[0]
+    comment.save()
+    
 def add_issues():
     issue = CommunicationsIssue()
     issue.store = Store.objects.get(store_number=2942)
-    issue.issue = 'B'
+    issue.issue = 'C'
+    issue.save()
+    
+    issue = CommunicationsIssue()
+    issue.store = Store.objects.get(store_number=2583)
+    issue.issue = 'A'
     issue.save()
     
     
-
 def main():
     add_locations()
     add_vendors()

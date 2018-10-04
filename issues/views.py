@@ -15,8 +15,14 @@ from .forms import EditIssueForm, AdditionalIssueForm
 
 def infowindow(request, id):
     issue = CommunicationsIssue.objects.get(pk=id)
-    pots = issue.store.phoneline_set.select_related().filter(phone_type='PTS').first()
-    circuit = issue.store.circuit_set.select_related().filter(circuit_type='P').first()
+    try:
+        pots = issue.store.phoneline_set.select_related().filter(phone_type='PTS').first()
+    except:
+        pots = None
+    try:
+        circuit = issue.store.circuit_set.select_related().filter(circuit_type='P').first()
+    except:
+        circuit = None
     context = {'issue': issue, 'pots': pots, 'circuit': circuit}
     return render(request, 'issues/infowindow.html', context)
     
@@ -27,13 +33,19 @@ def store_search(request, store):
     else:
         try:
             store = Store.objects.get(store_number=store)
-            phones = PhoneLine.objects.filter(store=store)
-            circuit = Circuit.objects.filter(circuit_type='P').first()
         except Store.DoesNotExist:
            store = None
-           phones = None
-           circuit = None
+        try:
+            print(store)
+            phones = PhoneLine.objects.filter(store=store.phone_billing_store)
+        except: 
+            phones = None
+        try:
+            circuit = Circuit.objects.filter(circuit_type='P').first()
+        except:
+            circuit = None
     context = {'store': store, 'phones': phones, 'circuit':circuit}
+    print(context)
     return render(request, 'issues/search_data.html', context)
     
     
